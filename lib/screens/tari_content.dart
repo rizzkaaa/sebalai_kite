@@ -1,0 +1,120 @@
+import 'package:flutter/material.dart';
+import 'package:uts/screens/detail_tari.dart';
+import 'package:uts/widgets/card_tari_rumah.dart';
+
+class TariContent extends StatefulWidget {
+  const TariContent({super.key});
+
+  @override
+  State<TariContent> createState() => _TariContentState();
+}
+
+class _TariContentState extends State<TariContent> {
+  final List<Map<String, dynamic>> listTari = [
+    {
+      'id': 1,
+      'judul': "Tari Campak",
+      'image': "assets/images/tari/tari-campak.jpg",
+      'asal': "Bangka",
+      'deskripsi':
+          "Tari Campak adalah tarian tradisional Bangka yang biasanya dibawakan untuk menyambut tamu dan dalam acara adat. Gerakannya lincah dan energik, menampilkan kekompakan penari pria dan wanita.",
+    },
+    {
+      'id': 2,
+      'judul': "Tari Sepen",
+      'image': "assets/images/tari/tari-sepen.jpeg",
+      'asal': "Bangka Tengah",
+      'deskripsi':
+          "Tari Sepen berasal dari Bangka Tengah dan biasanya ditampilkan dalam perayaan adat atau pesta rakyat. Tarian ini menonjolkan gerakan berputar dan harmonisasi antara penari laki-laki dan perempuan.",
+    },
+    {
+      'id': 3,
+      'judul': "Tari Kedidi",
+      'image': "assets/images/tari/tari-kedidi.png",
+      'asal': "Bangka Selatan",
+      'deskripsi':
+          "Tari Kedidi adalah tarian rakyat Bangka Selatan yang terkenal dengan gerakan kaki cepat seperti burung kedidi, simbol keceriaan dan semangat masyarakat lokal.",
+    },
+    {
+      'id': 4,
+      'judul': "Tari Men Sahang",
+      'image': "assets/images/tari/tari-men-sahang.jpg",
+      'asal': "Bangka",
+      'deskripsi':
+          "Tari Men Sahang adalah tarian yang biasanya dilakukan untuk upacara adat atau ritual tertentu di Bangka. Gerakannya anggun dengan iringan musik tradisional khas setempat.",
+    },
+    {
+      'id': 5,
+      'judul': "Tari Beripat Beregong",
+      'image': "assets/images/tari/tari-beripat-beregong.jpg",
+      'asal': "Belitung",
+      'deskripsi':
+          "Tari Beripat Beregong berasal dari Belitung, menampilkan gerakan tangan yang elegan dan berulang seperti membentuk pola geometris. Tarian ini melambangkan keharmonisan dan keseimbangan hidup.",
+    },
+    {
+      'id': 6,
+      'judul': "Tari Sambut",
+      'image': "assets/images/tari/tari-sambut.jpg",
+      'asal': "Bangka Barat",
+      'deskripsi':
+          "Tari Sambut adalah tarian penyambutan tamu di Bangka Barat. Gerakannya hangat dan ramah, menunjukkan sopan santun dan keramahan masyarakat setempat.",
+    },
+    {
+      'id': 7,
+      'judul': "Tari Zapin",
+      'image': "assets/images/tari/tari-zapin.jpeg",
+      'asal': "Bangka Belitung",
+      'deskripsi':
+          "Tari Zapin merupakan tarian Melayu yang berkembang di Bangka Belitung. Gerakannya lembut dan ritmis, biasanya dipentaskan untuk hiburan maupun dakwah budaya Islam.",
+    },
+    {
+      'id': 8,
+      'judul': "Tari Dincak Dambus",
+      'image': "assets/images/tari/tari-dincak-dambus.jpg",
+      'asal': "Bangka",
+      'deskripsi':
+          "Tari Dincak Dambus adalah tarian rakyat Bangka yang menonjolkan gerakan kaki cepat dengan iringan musik tradisional dambus. Tarian ini menggambarkan kegembiraan masyarakat lokal.",
+    },
+  ];
+  late List<bool> likedList;
+
+  @override
+  void initState() {
+    super.initState();
+    likedList = List.generate(listTari.length, (index) => false);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Container(
+        color: Colors.white,
+        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+        child: Column(
+          children: listTari.asMap().entries.map((entry) {
+            final index = entry.key;
+            final tari = entry.value;
+
+            return CardTariRumah(
+              item: tari,
+              onLike: () {
+                setState(() {
+                  likedList[index] = !likedList[index];
+                });
+              },
+              liked: likedList[index],
+              action: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DetailTari(idTari: tari['id']),
+                  ),
+                );
+              },
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+}
