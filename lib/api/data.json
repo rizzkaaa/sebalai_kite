@@ -1,0 +1,86 @@
+[
+  {
+    "lagu": [
+      {
+        "id": "1",
+        "gambar": "assets/images/yokMiak.jpg",
+        "judul": "Yok Miak",
+        "penyanyi": "Ria Irawan",
+        "audio": "audio/YoMiak.mpeg",
+        "asalDaerah": "Bangka Tengah"
+      },
+      {
+        "id": "2",
+        "gambar": "assets/images/alam.jpg",
+        "judul": "Alam Wisata Pulau Bangka",
+        "penyanyi": "Iwan Fals",
+        "audio": "audio/alam.mp3",
+        "asalDaerah": "Pangkalpinang"
+      },
+      {
+        "id": "3",
+        "gambar": "assets/images/zapin.jpg",
+        "judul": "Zapin Serumpun Sebalai",
+        "penyanyi": "Rita Sugiarto",
+        "audio": "audio/zapin.mpeg",
+        "asalDaerah": "Bangka Barat"
+      },
+      {
+        "id": "4",
+        "gambar": "assets/images/amoy.jpg",
+        "judul": "Amoy Kek Akew",
+        "penyanyi": "Arie Suyadi",
+        "audio": "audio/amoy.mpeg",
+        "asalDaerah": "Pangkalpinang"
+      },
+      {
+        "id": "5",
+        "gambar": "assets/images/gajahMina.jpg",
+        "judul": "Gajah Mina",
+        "penyanyi": "Artis Lokal Bangka",
+        "audio": "audio/gajahMina.mp3",
+        "asalDaerah": "Bangka Selatan"
+      },
+      {
+        "id": "6",
+        "gambar": "assets/images/timpeTamat.jpg",
+        "judul": "Timpe Tamat",
+        "penyanyi": "Grup Bangka Tradisional",
+        "audio": "audio/timpeTamat.mp3",
+        "asalDaerah": "Bangka"
+      },
+      {
+        "id": "7",
+        "gambar": "assets/images/campakBelitung.jpg",
+        "judul": "Campak Belitung",
+        "penyanyi": "Sanggar Seni Belitung",
+        "audio": "audio/campakBelitung.mp3",
+        "asalDaerah": "Belitung"
+      },
+      {
+        "id": "8",
+        "gambar": "assets/images/pekakSeru.jpg",
+        "judul": "Pekak Seru",
+        "penyanyi": "Vokalis Tradisional",
+        "audio": "audio/pekakSeru.mp3",
+        "asalDaerah": "Bangka Barat"
+      },
+      {
+        "id": "9",
+        "gambar": "assets/images/pulaiBelitung.jpg",
+        "judul": "Pulai Belitung",
+        "penyanyi": "Seniman Lokal",
+        "audio": "audio/pulaiBelitung.mp3",
+        "asalDaerah": "Belitung"
+      },
+      {
+        "id": "10",
+        "gambar": "assets/images/sekapur.jpg",
+        "judul": "Sekapur Sirih",
+        "penyanyi": "Grup Musik Melayu Bangka",
+        "audio": "audio/sekapur.mp3",
+        "asalDaerah": "Bangka"
+      }
+    ]
+  }
+]

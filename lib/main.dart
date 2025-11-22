@@ -1,8 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:uts/controllers/chat_controller.dart';
+import 'package:uts/screens/chat_page.dart';
+import 'package:uts/screens/home_screen.dart';
 import 'package:uts/splashScreen.dart';
+
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => ChatController(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -13,7 +23,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(textTheme: GoogleFonts.montagaTextTheme()),
-      home: SplashScreen(),
+      debugShowCheckedModeBanner: false,
+      home: HomeScreen(),
     );
   }
 }

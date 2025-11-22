@@ -29,7 +29,6 @@ class _SplashScreenState extends State<SplashScreen> {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          Image.asset('assets/images/SplashScreen.png', fit: BoxFit.cover),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

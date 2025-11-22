@@ -227,14 +227,7 @@ class _MusikContentState extends State<MusikContent> {
               },
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-            child: Text(
-              '© 2025 Budaya Bangka | Semua hak cipta dilindungi\n"Menjaga Warisan, Merangkai Masa Depan Bangka"',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 11, color: Colors.grey, height: 1.5),
-            ),
-          ),
+        
         ],
       ),
     );

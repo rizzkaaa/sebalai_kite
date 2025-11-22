@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:uts/screens/berita_content.dart';
+import 'package:uts/screens/chat_floating_widget.dart';
 import 'package:uts/screens/galeri_content.dart';
 import 'package:uts/screens/home_content.dart';
 import 'package:uts/screens/katalog_content.dart';
@@ -52,15 +53,9 @@ class _HomeScreenState extends State<HomeScreen>
           ),
           backgroundColor: Color(0xFFEBC5EB),
           actions: [
-            IconActionAppbar(
-              icon: Icons.notifications,
-              pesan: "Notif ditekan!",
-            ),
-            IconActionAppbar(
-              icon: Icons.person_2_outlined,
-              pesan: "Akun saya ditekan!",
-            ),
-            IconActionAppbar(icon: Icons.settings, pesan: "Setting ditekan!"),
+            IconActionAppbar(icon: Icons.notifications_none_outlined, onPressed: () {}),
+            IconActionAppbar(icon: Icons.map_outlined, onPressed: () {}),
+            IconActionAppbar(icon: Icons.person_2_outlined, onPressed: () {}),
           ],
         ),
         body: Container(
@@ -250,7 +245,7 @@ class _HomeScreenState extends State<HomeScreen>
                   vertical: 8,
                   horizontal: 20,
                 ),
-                leading: Icon(Icons.menu, size: 50,),
+                leading: Icon(Icons.menu, size: 50),
                 title: Text(
                   "Katalog",
                   style: GoogleFonts.judson(
@@ -268,10 +263,7 @@ class _HomeScreenState extends State<HomeScreen>
                   vertical: 8,
                   horizontal: 20,
                 ),
-                leading: Icon(
-                  Icons.newspaper,
-                  size: 50,
-                ),
+                leading: Icon(Icons.newspaper, size: 50),
                 title: Text(
                   "Berita",
                   style: GoogleFonts.judson(
@@ -289,10 +281,7 @@ class _HomeScreenState extends State<HomeScreen>
                   vertical: 8,
                   horizontal: 20,
                 ),
-                leading: Icon(
-                  Icons.photo_library,
-                  size: 50,
-                ),
+                leading: Icon(Icons.photo_library, size: 50),
                 title: Text(
                   "Galeri",
                   style: GoogleFonts.judson(
@@ -310,10 +299,7 @@ class _HomeScreenState extends State<HomeScreen>
                   vertical: 8,
                   horizontal: 20,
                 ),
-                leading: Icon(
-                  Icons.music_note,
-                  size: 50,
-                ),
+                leading: Icon(Icons.music_note, size: 50),
                 title: Text(
                   "Lagu",
                   style: GoogleFonts.judson(
@@ -331,10 +317,7 @@ class _HomeScreenState extends State<HomeScreen>
                   vertical: 8,
                   horizontal: 20,
                 ),
-                leading: Icon(
-                  Icons.supervisor_account_sharp,
-                  size: 50,
-                ),
+                leading: Icon(Icons.supervisor_account_sharp, size: 50),
                 title: Text(
                   "Tim",
                   style: GoogleFonts.judson(
@@ -347,6 +330,9 @@ class _HomeScreenState extends State<HomeScreen>
             ],
           ),
         ),
+        
+        floatingActionButton: ChatFloatingWidget(),
+        
         bottomNavigationBar: Container(
           height: 80,
           padding: EdgeInsets.symmetric(vertical: 15),
