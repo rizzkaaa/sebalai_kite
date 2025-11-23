@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:uts/models/lagu_model.dart';
+import 'package:uts/services/lagu_service.dart';
 
 class MusikContent extends StatefulWidget {
   const MusikContent({super.key});
@@ -10,43 +12,46 @@ class MusikContent extends StatefulWidget {
 }
 
 class _MusikContentState extends State<MusikContent> {
+  final LaguService service = LaguService();
+  late Future<List<LaguModel>> dataLagu;
   final AudioPlayer _audioPlayer = AudioPlayer();
   bool isPlaying = false;
   String? currentSong;
 
-  final List<Map<String, String>> laguList = [
-    {
-      'gambar': 'assets/images/yokMiak.jpg',
-      'judul': 'Yok Miak',
-      'penyanyi': 'Ria Irawan',
-      'audio': 'audio/YoMiak.mpeg',
-    },
-    {
-      'gambar': 'assets/images/alam.jpg',
-      'judul': 'Alam Wisata Pulau Bangka',
-      'penyanyi': 'Iwan Fals',
-      'audio': 'audio/alam.mp3',
-    },
-    {
-      'gambar': 'assets/images/zapin.jpg',
-      'judul': 'Zapin Serumpun Sebalai',
-      'penyanyi': 'Rita Sugiarto',
-      'audio': 'audio/zapin.mpeg',
-    },
-    {
-      'gambar': 'assets/images/amoy.jpg',
-      'judul': 'Amoy Kek Akew',
-      'penyanyi': 'Arie Suyadi',
-      'audio': 'audio/amoy.mpeg',
-    },
-  ];
+  // final List<Map<String, String>> laguList = [
+  //   {
+  //     'gambar': 'assets/images/yokMiak.jpg',
+  //     'judul': 'Yok Miak',
+  //     'penyanyi': 'Ria Irawan',
+  //     'audio': 'audio/YoMiak.mpeg',
+  //   },
+  //   {
+  //     'gambar': 'assets/images/alam.jpg',
+  //     'judul': 'Alam Wisata Pulau Bangka',
+  //     'penyanyi': 'Iwan Fals',
+  //     'audio': 'audio/alam.mp3',
+  //   },
+  //   {
+  //     'gambar': 'assets/images/zapin.jpg',
+  //     'judul': 'Zapin Serumpun Sebalai',
+  //     'penyanyi': 'Rita Sugiarto',
+  //     'audio': 'audio/zapin.mpeg',
+  //   },
+  //   {
+  //     'gambar': 'assets/images/amoy.jpg',
+  //     'judul': 'Amoy Kek Akew',
+  //     'penyanyi': 'Arie Suyadi',
+  //     'audio': 'audio/amoy.mpeg',
+  //   },
+  // ];
 
   late List<bool> likedList;
+  bool likedInitialized = false;
 
   @override
   void initState() {
     super.initState();
-    likedList = List.generate(laguList.length, (index) => false);
+    dataLagu = service.fetchLagu();
   }
 
   Future<void> playAudio(String assetPath) async {
@@ -142,92 +147,112 @@ class _MusikContentState extends State<MusikContent> {
               ],
             ),
           ),
-          Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.all(12),
-              itemCount: laguList.length,
-              itemBuilder: (context, index) {
-                final lagu = laguList[index];
-                final liked = likedList[index];
-                final isThisPlaying = currentSong == lagu['audio'] && isPlaying;
 
-                return Container(
-                  margin: const EdgeInsets.symmetric(vertical: 6),
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 6,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 50,
-                        height: 50,
+          FutureBuilder(
+            future: dataLagu,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text("Error: ${snapshot.error}"));
+              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return const Center(child: Text("Tidak ada data"));
+              } else {
+                final laguList = snapshot.data!;
+                if (!likedInitialized) {
+                  likedList = List.generate(laguList.length, (_) => false);
+                  likedInitialized = true;
+                }
+
+                return Expanded(
+                  child: ListView.builder(
+                    padding: const EdgeInsets.all(12),
+                    itemCount: laguList.length,
+                    itemBuilder: (context, index) {
+                      final lagu = laguList[index];
+                      final liked = likedList[index];
+                      final isThisPlaying =
+                          currentSong == lagu.audio && isPlaying;
+
+                      return Container(
+                        margin: const EdgeInsets.symmetric(vertical: 6),
+                        padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          image: DecorationImage(
-                            image: AssetImage(lagu['gambar'] ?? ''),
-                            fit: BoxFit.cover,
-                          ),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 6,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
                         ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        child: Row(
                           children: [
-                            Text(
-                              lagu['judul'] ?? '',
-                              style: GoogleFonts.delaGothicOne(
-                                fontSize: 10,
-                                color: Colors.black,
+                            Container(
+                              width: 50,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                image: DecorationImage(
+                                  image: AssetImage(lagu.gambar),
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
-                            Text(
-                              lagu['penyanyi'] ?? '',
-                              style: GoogleFonts.dongle(
-                                fontSize: 16,
-                                color: Colors.black87,
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    lagu.judul,
+                                    style: GoogleFonts.delaGothicOne(
+                                      fontSize: 10,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  Text(
+                                    lagu.penyanyi,
+                                    style: GoogleFonts.dongle(
+                                      fontSize: 16,
+                                      color: Colors.black87,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  likedList[index] = !likedList[index];
+                                });
+                              },
+                              icon: Icon(
+                                liked ? Icons.favorite : Icons.favorite_border,
+                                color: liked ? Colors.red : Colors.grey,
+                                size: 28,
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: () => playAudio(lagu.audio),
+                              icon: Icon(
+                                isThisPlaying
+                                    ? Icons.pause_circle
+                                    : Icons.play_circle,
+                                color: Colors.deepPurple,
+                                size: 32,
                               ),
                             ),
                           ],
                         ),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          setState(() {
-                            likedList[index] = !likedList[index];
-                          });
-                        },
-                        icon: Icon(
-                          liked ? Icons.favorite : Icons.favorite_border,
-                          color: liked ? Colors.red : Colors.grey,
-                          size: 28,
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: () => playAudio(lagu['audio']!),
-                        icon: Icon(
-                          isThisPlaying
-                              ? Icons.pause_circle
-                              : Icons.play_circle,
-                          color: Colors.deepPurple,
-                          size: 32,
-                        ),
-                      ),
-                    ],
+                      );
+                    },
                   ),
                 );
-              },
-            ),
+              }
+            },
           ),
-        
         ],
       ),
     );

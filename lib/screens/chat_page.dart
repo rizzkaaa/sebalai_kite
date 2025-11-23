@@ -28,11 +28,14 @@ class ChatPage extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          leading: IconActionAppbar(
-            icon: Icons.arrow_back_rounded,
-            onPressed: () {
-              Navigator.pop(context);
-            },
+          leading: Container(
+            margin: const EdgeInsets.only(left: 15),
+            child: IconActionAppbar(
+              icon: Icons.arrow_back_rounded,
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
           ),
         ),
         body: Stack(
@@ -65,9 +68,7 @@ class ChatPage extends StatelessWidget {
                 ],
               ),
             ),
-            ChatWidget(
-              floating: false,
-            ),
+            ChatWidget(floating: false),
           ],
         ),
       ),

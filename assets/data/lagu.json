@@ -1,0 +1,82 @@
+[
+  {
+    "id": 1,
+    "gambar": "assets/images/audio/pulauMemperak.jpg",
+    "judul": "Pulau Memperak",
+    "penyanyi": "Aryandi Abi",
+    "audio": "audio/pulauMemperak.mp3",
+    "asalDaerah": "Belitung Timur"
+  },
+  {
+    "id": 2,
+    "gambar": "assets/images/audio/marasTaun.jpg",
+    "judul": "Maras Taun",
+    "penyanyi": "Abdul Hadi",
+    "audio": "audio/marasTaun.mp3",
+    "asalDaerah": "Belitung"
+  },
+  {
+    "id": 3,
+    "gambar": "assets/images/audio/dendangBangKarang.jpeg",
+    "judul": "Dendang Bang Karang",
+    "penyanyi": "Idio Sukarno",
+    "audio": "audio/dendangBangKarang.mp3",
+    "asalDaerah": "Belitung"
+  },
+  {
+    "id": 4,
+    "gambar": "assets/images/audio/1muharramDiKenango.jpeg",
+    "judul": "1 Muharram di Kenango",
+    "penyanyi": "Erni Trisnawati",
+    "audio": "audio/1muharramDiKenango.mp3",
+    "asalDaerah": "Bangka"
+  },
+  {
+    "id": 5,
+    "gambar": "assets/images/audio/bedincak.jpeg",
+    "judul": "Bedincak",
+    "penyanyi": "Joe",
+    "audio": "audio/bedincak.mp3",
+    "asalDaerah": "Bangka"
+  },
+  {
+    "id": 6,
+    "gambar": "assets/images/audio/men-sahang.jpeg",
+    "judul": "Men Sahang Lah Mirah",
+    "penyanyi": "Parlin Hutagalung.",
+    "audio": "audio/men-sahang.mp3",
+    "asalDaerah": "Bangka"
+  },
+  {
+    "id": 7,
+    "gambar": "assets/images/audio/yokMiak.jpg",
+    "judul": "Yok Miak",
+    "penyanyi": "Ria Irawan",
+    "audio": "audio/YoMiak.mpeg",
+    "asalDaerah": "Bangka Tengah"
+  },
+  {
+    "id": 8,
+    "gambar": "assets/images/audio/alam.jpg",
+    "judul": "Alam Wisata Pulau Bangka",
+    "penyanyi": "Iwan Fals",
+    "audio": "audio/alam.mp3",
+    "asalDaerah": "Pangkalpinang"
+  },
+  {
+    "id": 9,
+    "gambar": "assets/images/audio/zapin.jpg",
+    "judul": "Zapin Serumpun Sebalai",
+    "penyanyi": "Rita Sugiarto",
+    "audio": "audio/zapin.mpeg",
+    "asalDaerah": "Bangka Barat"
+  },
+  {
+    "id": 10,
+    "gambar": "assets/images/audio/amoy.jpg",
+    "judul": "Amoy Kek Akew",
+    "penyanyi": "Arie Suyadi",
+    "audio": "audio/amoy.mpeg",
+    "asalDaerah": "Pangkalpinang"
+  }
+]

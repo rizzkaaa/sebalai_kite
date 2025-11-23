@@ -60,9 +60,18 @@ User: $text
       );
 
       final data = jsonDecode(response.body);
-      final reply = data["candidates"][0]["content"]["parts"][0]["text"];
-
-      messages.add({'role': 'assistant', 'content': reply});
+      print('data: $data');
+      final candidates = data["candidates"];
+      print('candidates: $candidates');
+      if (candidates == null || candidates.isEmpty) {
+        messages.add({
+          'role': 'assistant',
+          'content': 'Maaf, tidak mendapatkan jawaban dari server.',
+        });
+      } else {
+        final reply = candidates[0]["content"]["parts"][0]["text"] ?? "";
+        messages.add({'role': 'assistant', 'content': reply});
+      }
     } catch (e) {
       messages.add({'role': 'assistant', 'content': 'Error: $e'});
     }
