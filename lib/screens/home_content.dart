@@ -28,39 +28,23 @@ class HomeContent extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
         child: Column(
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "“Menelusuri Warisan \nBudaya Bangka”",
-                      style: GoogleFonts.niconne(fontSize: 25),
-                    ),
-                    Text(
-                      "Dari tarian tradisional, musik dambus, hingga kuliner khas yang penuh makna.",
-                      style: GoogleFonts.inriaSerif(fontSize: 16),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFFDBB6E0),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "“Menelusuri Warisan \nBudaya Bangka”",
+                    style: GoogleFonts.niconne(fontSize: 25),
                   ),
-                  child: Text(
-                    "Pelajari Lebih Lanjut",
-                    style: GoogleFonts.judson(
-                      color: Colors.black,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  Text(
+                    "Dari tarian tradisional, musik dambus, hingga kuliner khas yang penuh makna.",
+                    style: GoogleFonts.inriaSerif(fontSize: 16),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
+
             SizedBox(height: 20),
             Column(
               children: listBerita.map((berita) {
