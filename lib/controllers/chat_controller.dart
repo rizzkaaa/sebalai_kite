@@ -6,7 +6,7 @@ class ChatController extends ChangeNotifier {
   final List<Map<String, String>> messages = [];
   bool isLoading = false;
 
-  final String apiKey = 'AIzaSyAjupwCFIHE3q2g2EQWhvjIebn9-UsBobE';
+  final String _apiKey = 'AIzaSyAjupwCFIHE3q2g2EQWhvjIebn9-UsBobE';
 
   ChatController() {
     messages.add({
@@ -36,7 +36,7 @@ class ChatController extends ChangeNotifier {
     try {
       final response = await http.post(
         Uri.parse(
-          'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=$apiKey',
+          'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=$_apiKey',
         ),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
