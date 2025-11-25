@@ -1,0 +1,34 @@
+[
+  {
+    "id": 1,
+    "image": "assets/images/bajuPaksian.jpeg",
+    "judul": "Baju Paksian",
+    "deskripsi": "Baju Paksian merupakan pakaian adat tradisional khas Provinsi Bangka Belitung yang biasanya dikenakan oleh pengantin perempuan pada upacara pernikahan.\n\nCiri khas utamanya terletak pada mahkota besar berwarna emas yang disebut Paksian, melambangkan kemuliaan dan keanggunan wanita Melayu Bangka Belitung.\n\nBusananya terdiri atas baju kebaya panjang berwarna hijau tua atau emas, kain songket dengan motif khas daerah, serta berbagai perhiasan emas seperti kalung, gelang, dan pending.\n\nMakna filosofinya adalah kemewahan, kehormatan, dan keseimbangan hidup, mencerminkan karakter masyarakat Bangka Belitung yang ramah dan menjunjung tinggi nilai tradisi leluhur.",
+    "asalDaerah": "Bangka Belitung"
+    
+  },
+  {
+    "id": 2,
+    "image": "assets/images/bajuKurung Merah.jpeg",
+    "judul": "Baju Kurung\nTanggung (Merah)",
+    "deskripsi": "Baju Kurung Tanggung merupakan pakaian adat kebanggaan masyarakat Bangka Belitung, dikenakan oleh pria dan wanita dalam berbagai upacara adat dan perayaan resmi, termasuk pernikahan dan acara budaya.\n\nWarna merah pada baju ini melambangkan keberanian, semangat, dan kekuatan hati masyarakat Melayu Bangka.\n\nPotongan baju kurung tanggung memiliki lengan tiga perempat (tanggung) dan dipadukan dengan kain songket berwarna senada, penutup kepala khas, serta selendang atau pending di bagian pinggang.\n\nSelain sebagai simbol keanggunan, busana ini juga mencerminkan identitas sosial dan kebanggaan terhadap warisan budaya daerah.",
+    "asalDaerah": "Bangka Belitung"
+    
+  },
+  {
+    "id": 3,
+    "image": "assets/images/BajuKurungBiru.jpeg",
+    "judul": "Baju Kurung\nTanggung (Biru)",
+    "deskripsi": "Baju Kurung Tanggung berwarna biru sering dipakai oleh pejabat adat, penari, atau peserta upacara resmi di Bangka Belitung.\n\nWarna biru menggambarkan ketenangan, kesetiaan, dan keharmonisan hidup masyarakat pesisir yang dekat dengan laut.\n\nDesainnya menonjolkan kesederhanaan namun tetap elegan, dengan detail bordir atau songket di bagian kerah dan tangan.\n\nBusana ini menjadi simbol kerendahan hati dan kedamaian, sekaligus wujud penghormatan terhadap nilai-nilai budaya Melayu dan semangat persaudaraan antarwarga Bangka Belitung.",
+    "asalDaerah": "Bangka Belitung"
+    
+  },
+  {
+    "id": 4,
+    "image": "assets/images/BajuKurungUngu.jpeg",
+    "judul": "Baju Kurung\nTanggung (Ungu)",
+    "deskripsi": "Baju Kurung Tanggung berwarna ungu adalah variasi modern yang sering digunakan dalam acara pertunjukan budaya, festival, dan kegiatan resmi daerah.\n\nWarna ungu melambangkan keanggunan, kebijaksanaan, dan wibawa, menjadikannya pilihan favorit bagi generasi muda dalam menampilkan sisi tradisional yang tetap modis.\n\nStrukturnya tetap mempertahankan bentuk asli baju kurung tanggung dengan potongan lengan sedang, dipadukan dengan kain songket khas Bangka Belitung yang penuh makna.\n\nBusana ini menggambarkan perpaduan antara tradisi dan modernitas, menunjukkan bahwa budaya Bangka Belitung terus hidup dan berkembang di tengah arus zaman.",
+    "asalDaerah": "Bangka Belitung"
+    
+  }
+]

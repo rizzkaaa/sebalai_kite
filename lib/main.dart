@@ -3,7 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:uts/controllers/chat_controller.dart';
 import 'package:uts/screens/home_screen.dart';
-import 'package:uts/screens/sign_in_up_screen.dart';
 import 'package:uts/splashScreen.dart';
 
 void main() {
@@ -24,7 +23,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(textTheme: GoogleFonts.montagaTextTheme()),
       debugShowCheckedModeBanner: false,
-      home: SignInUpScreen(),
+      home: HomeScreen(),
     );
   }
 }

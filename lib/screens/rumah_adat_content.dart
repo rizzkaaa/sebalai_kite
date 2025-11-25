@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:uts/widgets/card_tari_rumah.dart';
 import 'package:uts/widgets/detail_rumah_pakaian.dart';
+import 'package:uts/services/rumah_service.dart';
+import 'package:uts/models/rumah_model.dart';
 
 class RumahAdatContent extends StatefulWidget {
   const RumahAdatContent({super.key});
@@ -10,45 +12,41 @@ class RumahAdatContent extends StatefulWidget {
 }
 
 class _RumahAdatContentState extends State<RumahAdatContent> {
-  final List<Map<String, dynamic>> listRumahAdat = [
-    {
-      'id': 1,
-      'judul': 'Rumah Limas',
-      'image': 'assets/images/rumahLimas.jpeg',
-      'asal': 'Bangka Tengah',
-      'deskripsi':
-          'Rumah Limas adalah rumah adat yang memiliki bentuk bertingkat seperti limas. Arsitekturnya mencerminkan status sosial pemilik dan biasa digunakan untuk acara adat. Terbuat dari kayu dengan ukiran khas, rumah ini menampilkan keindahan dan keanggunan budaya Melayu Bangka.',
-    },
-    {
-      'id': 2,
-      'judul': 'Rumah Rakit',
-      'image': 'assets/images/rumahRakit.jpeg',
-      'asal': 'Bangka Barat',
-      'deskripsi':
-          'Rumah Rakit merupakan rumah adat unik yang dibangun di atas rakit bambu dan mengapung di air. Rumah ini menjadi simbol kehidupan masyarakat pesisir Bangka yang bergantung pada sungai dan laut, serta menggambarkan adaptasi terhadap lingkungan perairan.',
-    },
-    {
-      'id': 3,
-      'judul': 'Rumah Panggung',
-      'image': 'assets/images/rumahPanggung.jpeg',
-      'asal': 'Belitung (Tanjung Pandan),\nBangka Selatan, dan\nBangka Tengah',
-      'deskripsi':
-          'Rumah Panggung adalah rumah adat yang dibangun di atas tiang tinggi dari kayu. Desainnya berfungsi untuk melindungi penghuni dari banjir dan binatang buas. Gaya rumah ini menunjukkan kearifan lokal masyarakat Bangka dalam menyesuaikan diri dengan kondisi alam sekitarnya.',
-    },
-  ];
+  final RumahService _service = RumahService();
 
-  late List<bool> likedList;
-  late List<bool> bookmarkList;
+  List<RumahModel> listRumahAdat = [];
+  List<bool> likedList = [];
+  List<bool> bookmarkList = [];
+
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    likedList = List.generate(listRumahAdat.length, (index) => false);
-    bookmarkList = List.generate(listRumahAdat.length, (index) => false);
+    loadData();
+  }
+
+  Future<void> loadData() async {
+    try {
+      final data = await _service.fetchRumah();
+      setState(() {
+        listRumahAdat = data;
+        likedList = List.generate(data.length, (_) => false);
+        bookmarkList = List.generate(data.length, (_) => false);
+        isLoading = false;
+      });
+    } catch (e) {
+      print("Error: $e");
+      setState(() => isLoading = false);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return Center(child: CircularProgressIndicator());
+    }
+
     return SingleChildScrollView(
       child: Container(
         color: Colors.white,
@@ -59,7 +57,13 @@ class _RumahAdatContentState extends State<RumahAdatContent> {
             final rumah = entry.value;
 
             return CardTariRumah(
-              item: rumah,
+              item: {
+                'id': rumah.id,
+                'judul': rumah.judul,
+                'image': rumah.gambar,
+                'asal': rumah.asalDaerah,
+                'deskripsi': rumah.deskripsi,
+              },
               liked: likedList[index],
               onLike: () {
                 setState(() {
@@ -73,7 +77,13 @@ class _RumahAdatContentState extends State<RumahAdatContent> {
                     return StatefulBuilder(
                       builder: (context, setStateDialog) {
                         return DetailRumahPakaian(
-                          item: rumah,
+                          item: {
+                            'id': rumah.id,
+                            'judul': rumah.judul,
+                            'image': rumah.gambar,
+                            'asal': rumah.asalDaerah,
+                            'deskripsi': rumah.deskripsi,
+                          },
                           liked: likedList[index],
                           bookmarked: bookmarkList[index],
                           onLike: () {

@@ -18,33 +18,6 @@ class _MusikContentState extends State<MusikContent> {
   bool isPlaying = false;
   String? currentSong;
 
-  // final List<Map<String, String>> laguList = [
-  //   {
-  //     'gambar': 'assets/images/yokMiak.jpg',
-  //     'judul': 'Yok Miak',
-  //     'penyanyi': 'Ria Irawan',
-  //     'audio': 'audio/YoMiak.mpeg',
-  //   },
-  //   {
-  //     'gambar': 'assets/images/alam.jpg',
-  //     'judul': 'Alam Wisata Pulau Bangka',
-  //     'penyanyi': 'Iwan Fals',
-  //     'audio': 'audio/alam.mp3',
-  //   },
-  //   {
-  //     'gambar': 'assets/images/zapin.jpg',
-  //     'judul': 'Zapin Serumpun Sebalai',
-  //     'penyanyi': 'Rita Sugiarto',
-  //     'audio': 'audio/zapin.mpeg',
-  //   },
-  //   {
-  //     'gambar': 'assets/images/amoy.jpg',
-  //     'judul': 'Amoy Kek Akew',
-  //     'penyanyi': 'Arie Suyadi',
-  //     'audio': 'audio/amoy.mpeg',
-  //   },
-  // ];
-
   late List<bool> likedList;
   bool likedInitialized = false;
 

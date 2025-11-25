@@ -1,0 +1,34 @@
+[
+    {
+      "id": 1,
+      "judul": "Lempah Kuning",
+      "image": "assets/images/lempahKuning.jpeg",
+      "asalDaerah": "Bangka Belitung",
+      "deskripsi": "Lempah Kuning adalah masakan tradisional khas Bangka Belitung yang terkenal dengan cita rasa asam pedas segar dan khas. Nama \"Lempah\" berasal dari bahasa lokal yang berarti berkuah, sedangkan \"kuning\" dari warna kuahnya yang cerah karena penggunaan kunyit.",
+      "resep": "Resep Lempah Kuning Khas Bangka Belitung\n\nBahan Utama:\n- 500 gram ikan (biasanya ikan tongkol, kakap, atau ikan laut segar)\n- 1 liter air\n- 2 lembar daun jeruk\n- 1 batang serai, memarkan\n- 1 potong nanas (untuk rasa asam kecil, opsional, untuk rasa asam segar)\n- 2 buah asam kandis atau 1 sdm air asam jawa\n- Garam dan gula secukupnya\n\nBumbu Halus:\n- 5 siung bawang merah\n- 3 siung bawang putih\n- 3 cm kunyit (atau 1 sdt bubuk kunyit)\n- 5 buah cabai merah keriting\n- 3 buah kemiri, sangrai\n- 1 cm terasi bakar (opsional)\n- Sedikit terasi bakar (khas Bangka)\n\nCara Memasak:\n1. Haluskan bumbu.\n2. Tumis hingga harum.\n3. Masukkan serai & daun jeruk.\n4. Tuang air dan didihkan.\n5. Tambahkan asam, garam, dan gula.\n6. Masukkan ikan, masak hingga matang.\n7. Sajikan hangat."
+    },
+    {
+      "id": 2,
+      "judul": "Mie Bangka",
+      "image": "assets/images/mieBangka.jpeg",
+      "asalDaerah": "Pulau Bangka",
+      "deskripsi": "Mie Bangka adalah kuliner legendaris dari Pulau Bangka yang terkenal dengan mie kuning kenyal, topping ayam cincang, tauge, bakso, dan kuah kaldu gurih. Ciri khasnya adalah penggunaan minyak bawang putih dan kecap asin khas Bangka.",
+      "resep": "Resep Mie Bangka Khas Bangka Belitung\n\nUntuk Mie:\n- 200 gram mie basah\n- 1 sdm minyak bawang putih\n- 1 sdt kecap asin\n\nTopping Ayam:\n- 150 gram ayam cincang\n- 2 siung bawang putih halus\n- 1 sdm kecap asin\n- 1 sdm kecap manis\n- Garam, lada, gula secukupnya\n\nKuah:\n- 500 ml air kaldu ayam\n- 2 siung bawang putih geprek\n- Daun bawang & seledri\n\nCara Membuat:\n1. Rebus mie, campur minyak & kecap.\n2. Tumis ayam dengan bumbu.\n3. Rebus kaldu.\n4. Sajikan mie + ayam + kuah."
+    },
+    {
+      "id": 3,
+      "judul": "Lakso Bangka",
+      "image": "assets/images/lakso.jpeg",
+      "asalDaerah": "Pulau Bangka",
+      "deskripsi": "Lakso adalah makanan khas Bangka berupa mie tebal dari sagu atau tepung beras dengan kuah santan kuning yang gurih dan harum rempah. Biasanya dinikmati dengan bawang goreng dan sambal.",
+      "resep": "Resep Lakso Bangka\n\nLakso:\n- 250 gram tepung beras\n- 50 gram tepung sagu\n- 500 ml air panas\n- 1 sdt garam\n\nKuah:\n- 500 ml santan\n- 2 batang serai\n- 3 lembar daun salam\n- 1 ruas lengkuas\n- Bumbu halus: bawang merah, bawang putih, kunyit, ketumbar, merica\n\nCara Membuat:\n1. Buat adonan lakso dan rebus.\n2. Tumis bumbu.\n3. Masukkan santan.\n4. Sajikan."
+    },
+    {
+      "id": 4,
+      "judul": "Sambel Lingkung",
+      "image": "assets/images/sambelLingkung.jpeg",
+      "asalDaerah": "Bangka Belitung",
+      "deskripsi": "Sambal Lingkung adalah abon ikan khas Bangka Belitung yang terbuat dari ikan laut seperti tenggiri atau gabus. Teksturnya halus seperti serundeng dengan rasa gurih pedas dan aroma rempah kuat.",
+      "resep": "Resep Sambal Lingkung\n\nBahan Utama:\n- 500 gram ikan tenggiri kukus\n- 200 ml santan\n- Bawang merah, bawang putih, cabai\n- Jahe, lengkuas, serai\n- Garam, gula merah, asam jawa\n\nCara Membuat:\n1. Haluskan bumbu.\n2. Tumis hingga harum.\n3. Tambahkan santan & serai.\n4. Masukkan ikan suwir.\n5. Aduk terus hingga kering (1–1.5 jam)."
+    }
+  ]
