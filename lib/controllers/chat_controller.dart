@@ -6,7 +6,7 @@ class ChatController extends ChangeNotifier {
   final List<Map<String, String>> messages = [];
   bool isLoading = false;
 
-  final String _apiKey = 'AIzaSyAjupwCFIHE3q2g2EQWhvjIebn9-UsBobE';
+  final String _apiKey = 'AIzaSyA7r3G5FfmoNa3eYneGyN1IGdPhfbZwVeo';
 
   ChatController() {
     messages.add({

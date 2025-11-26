@@ -5,6 +5,7 @@ import 'package:uts/screens/chat_floating_widget.dart';
 import 'package:uts/screens/galeri_content.dart';
 import 'package:uts/screens/home_content.dart';
 import 'package:uts/screens/katalog_content.dart';
+import 'package:uts/screens/maps_screen.dart';
 import 'package:uts/screens/musik_content.dart';
 import 'package:uts/screens/tim_content.dart';
 import 'package:uts/widgets/icon_action_appbar.dart';
@@ -53,8 +54,19 @@ class _HomeScreenState extends State<HomeScreen>
           ),
           backgroundColor: Color(0xFFEBC5EB),
           actions: [
-            IconActionAppbar(icon: Icons.notifications_none_outlined, onPressed: () {}),
-            IconActionAppbar(icon: Icons.map_outlined, onPressed: () {}),
+            IconActionAppbar(
+              icon: Icons.notifications_none_outlined,
+              onPressed: () {},
+            ),
+            IconActionAppbar(
+              icon: Icons.map_outlined,
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const MapsScreen()),
+                );
+              },
+            ),
             IconActionAppbar(icon: Icons.person_2_outlined, onPressed: () {}),
           ],
         ),
@@ -330,9 +342,9 @@ class _HomeScreenState extends State<HomeScreen>
             ],
           ),
         ),
-        
+
         floatingActionButton: ChatFloatingWidget(),
-        
+
         bottomNavigationBar: Container(
           height: 80,
           padding: EdgeInsets.symmetric(vertical: 15),

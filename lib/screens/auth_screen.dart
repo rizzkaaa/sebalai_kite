@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:uts/screens/sign_in_screen.dart';
 import 'package:uts/screens/sign_up_screen.dart';
 
-class SignInUpScreen extends StatefulWidget {
-  const SignInUpScreen({super.key});
+class AuthScreen extends StatefulWidget {
+  const AuthScreen({super.key});
 
   @override
-  State<SignInUpScreen> createState() => _SignInUpScreenState();
+  State<AuthScreen> createState() => _AuthScreenState();
 }
 
-class _SignInUpScreenState extends State<SignInUpScreen> {
+class _AuthScreenState extends State<AuthScreen> {
   bool signIn = false;
 
   void changePage(bool condition) {

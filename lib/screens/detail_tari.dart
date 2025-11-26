@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:uts/screens/form_review.dart';
+import 'package:uts/widgets/icon_action_appbar.dart';
 import 'package:uts/widgets/review.dart';
 import 'package:uts/services/tari_service.dart';
 import 'package:uts/models/tari_model.dart';
@@ -70,24 +71,11 @@ class _DetailTariState extends State<DetailTari> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Container(
-                              margin: EdgeInsets.all(5),
-                              decoration: BoxDecoration(
-                                color: Color(0xFFF4A9C2),
-                                shape: BoxShape.circle,
-                              ),
-                              child: Center(
-                                child: IconButton(
-                                  padding: EdgeInsets.zero,
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  icon: Icon(
-                                    Icons.subdirectory_arrow_left_rounded,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
+                            IconActionAppbar(
+                              icon: Icons.subdirectory_arrow_left_rounded,
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
                             ),
 
                             Container(

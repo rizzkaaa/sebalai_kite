@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "362666924564",
+    "project_id": "sebalai-kite-db",
+    "storage_bucket": "sebalai-kite-db.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:362666924564:android:fdd8d2e7220978386f2501",
+        "android_client_info": {
+          "package_name": "com.example.uts"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBWubkf1EdFf8dLmzkbtLrj4UAorM92CKQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
