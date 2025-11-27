@@ -15,7 +15,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
 
     // Pindah ke halaman berikutnya setelah 3 detik
-    Future.delayed(const Duration(seconds: 1), () {
+    Future.delayed(const Duration(seconds: 5), () {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => LottieWidget()),
@@ -33,7 +33,7 @@ class _SplashScreenState extends State<SplashScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset(
-                'assets/images/Peta.png',
+                'assets/images/splashScreen.png',
                 height: 254,
                 width: 262,
                 fit: BoxFit.contain,

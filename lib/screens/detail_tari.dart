@@ -72,7 +72,7 @@ class _DetailTariState extends State<DetailTari> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             IconActionAppbar(
-                              icon: Icons.subdirectory_arrow_left_rounded,
+                              icon: Icons.reply,
                               onPressed: () {
                                 Navigator.pop(context);
                               },

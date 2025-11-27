@@ -47,7 +47,7 @@ class DetailMakan extends StatelessWidget {
                               Navigator.pop(context);
                             },
                             icon: Icon(
-                              Icons.subdirectory_arrow_left_rounded,
+                              Icons.reply,
                               color: Colors.white,
                             ),
                           ),

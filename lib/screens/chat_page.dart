@@ -31,7 +31,7 @@ class ChatPage extends StatelessWidget {
           leading: Container(
             margin: const EdgeInsets.only(left: 15),
             child: IconActionAppbar(
-              icon: Icons.arrow_back_rounded,
+              icon: Icons.reply_rounded,
               onPressed: () {
                 Navigator.pop(context);
               },

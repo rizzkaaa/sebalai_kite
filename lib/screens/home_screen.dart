@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:uts/screens/auth_screen.dart';
 import 'package:uts/screens/berita_content.dart';
 import 'package:uts/screens/chat_floating_widget.dart';
 import 'package:uts/screens/galeri_content.dart';
@@ -8,10 +9,12 @@ import 'package:uts/screens/katalog_content.dart';
 import 'package:uts/screens/maps_screen.dart';
 import 'package:uts/screens/musik_content.dart';
 import 'package:uts/screens/tim_content.dart';
+import 'package:uts/services/auth_service.dart';
+import 'package:uts/widgets/footer.dart';
 import 'package:uts/widgets/icon_action_appbar.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -20,6 +23,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  final AuthService _authService = AuthService();
 
   @override
   void initState() {
@@ -67,7 +71,16 @@ class _HomeScreenState extends State<HomeScreen>
                 );
               },
             ),
-            IconActionAppbar(icon: Icons.person_2_outlined, onPressed: () {}),
+            IconActionAppbar(
+              icon: Icons.person_2_outlined,
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => _authService.toAccountPage()),
+                );
+              },
+            ),
+            const SizedBox(width: 10,)
           ],
         ),
         body: Container(
@@ -345,29 +358,7 @@ class _HomeScreenState extends State<HomeScreen>
 
         floatingActionButton: ChatFloatingWidget(),
 
-        bottomNavigationBar: Container(
-          height: 80,
-          padding: EdgeInsets.symmetric(vertical: 15),
-          decoration: BoxDecoration(
-            color: Color(0xFFF4A9C2),
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(30),
-              topRight: Radius.circular(30),
-            ),
-          ),
-          child: Column(
-            children: [
-              Text(
-                "© 2025 Budaya Bangka | Semua hak cipta dilindungi",
-                style: GoogleFonts.inriaSerif(fontSize: 14),
-              ),
-              Text(
-                "“Menjaga Warisan, Merangkai Masa Depan Bangka”",
-                style: GoogleFonts.inriaSerif(fontSize: 12),
-              ),
-            ],
-          ),
-        ),
+      bottomNavigationBar: Footer(color: Color(0xFFF4A9C2)),
       ),
     );
   }

@@ -177,7 +177,7 @@ class _MapsScreenState extends State<MapsScreen> {
             left: 20,
             child: SafeArea(
               child: IconActionAppbar(
-                icon: Icons.subdirectory_arrow_left_rounded,
+                icon: Icons.reply,
                 onPressed: () {
                   Navigator.pop(context);
                 },

@@ -10,7 +10,7 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
-  bool signIn = false;
+  bool signIn = true;
 
   void changePage(bool condition) {
     setState(() {

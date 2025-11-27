@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_inset_shadow/flutter_inset_shadow.dart' as inset;
+import 'package:provider/provider.dart';
+import 'package:uts/controllers/auth_controller.dart';
 import 'package:uts/widgets/text_form_field_register.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -30,6 +32,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final registerController = context.watch<AuthController>();
+
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: SingleChildScrollView(
@@ -240,6 +244,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   if (value == null || value.isEmpty) {
                                     return "Password tidak boleh kosong";
                                   }
+                                  if (value.length < 6) {
+                                    return "Minimal 6 karakter";
+                                  }
                                   return null;
                                 },
                               ),
@@ -250,7 +257,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 icon: Icons.vpn_key_outlined,
                                 validation: (value) {
                                   if (value == null || value.isEmpty) {
-                                    return "Password tidak boleh kosong";
+                                    return "Konfirmasi Password Anda";
+                                  }
+                                  if (value !=
+                                      _passwordController.text.trim()) {
+                                    return "Masukkan password yang benar";
                                   }
                                   return null;
                                 },
@@ -265,7 +276,27 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: registerController.isLoading
+                        ? null
+                        : () async {
+                            if (!_formKey.currentState!.validate()) return;
+
+                            final success = await registerController.register(
+                              _usernameController.text.trim(),
+                              _emailController.text.trim(),
+                              _passwordController.text.trim(),
+                            );
+
+                            if (success) {
+                              widget.changePage(true);
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(registerController.error!),
+                                ),
+                              );
+                            }
+                          },
                     style: ElevatedButton.styleFrom(
                       elevation: 5,
                       shape: RoundedRectangleBorder(
@@ -274,48 +305,50 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       backgroundColor: Colors.transparent,
                       padding: EdgeInsets.zero,
                     ),
-                    child: Container(
-                      width: double.infinity,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            Color(0xFFCBA2EC),
-                            Color(0xFFF2ADF0),
-                            Color(0xFFCBA2EC),
-                          ],
-                          stops: [0.0, 0.5, 1.0],
-                        ),
-                      ),
-                      child: Container(
-                        width: double.infinity,
-                        height: double.infinity,
-                        decoration: inset.BoxDecoration(
-                          boxShadow: [
-                            inset.BoxShadow(
-                              color: Colors.black45.withOpacity(0.5),
-                              blurRadius: 2,
-                              offset: Offset(3, -3),
-                              inset: true,
+                    child: registerController.isLoading
+                        ? CircularProgressIndicator(color: Colors.white)
+                        : Container(
+                            width: double.infinity,
+                            height: 50,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  Color(0xFFCBA2EC),
+                                  Color(0xFFF2ADF0),
+                                  Color(0xFFCBA2EC),
+                                ],
+                                stops: [0.0, 0.5, 1.0],
+                              ),
                             ),
-                          ],
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: Center(
-                          child: Text(
-                            "Daftar",
-                            style: GoogleFonts.montserrat(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                              color: Colors.white,
+                            child: Container(
+                              width: double.infinity,
+                              height: double.infinity,
+                              decoration: inset.BoxDecoration(
+                                boxShadow: [
+                                  inset.BoxShadow(
+                                    color: Colors.black45.withOpacity(0.5),
+                                    blurRadius: 2,
+                                    offset: Offset(3, -3),
+                                    inset: true,
+                                  ),
+                                ],
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  "Daftar",
+                                  style: GoogleFonts.montserrat(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                    ),
                   ),
                 ),
               ],
