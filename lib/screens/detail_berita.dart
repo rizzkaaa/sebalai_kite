@@ -7,47 +7,6 @@ class DetailBeritaScreen extends StatelessWidget {
 
   const DetailBeritaScreen({super.key, required this.berita});
 
-  // final List<Map<String, dynamic>> beritaList = [
-  //   {
-  //     'id': 1,
-  //     'judul': 'Festival Tari Campak Meriahkan Peringatan Hari Budaya Bangka',
-  //     'tanggal': 'Bangka, 26 Oktober — ',
-  //     'gambar': 'assets/images/tariCampak.png',
-  //     'paragraf': [
-  //       'Dalam rangka memperingati Hari Budaya Bangka, Dinas Kebudayaan menggelar Festival Tari Campak 2025 di Lapangan Merdeka, Sungailiat.',
-  //       'Acara ini diikuti oleh lebih dari 20 sanggar seni tradisional dari berbagai daerah di Pulau Bangka.',
-  //       'Tari Campak dikenal sebagai simbol keceriaan dan kebersamaan masyarakat Melayu Bangka.',
-  //       'Selain pertunjukan tari, festival juga menampilkan pameran kuliner tradisional dan lokakarya tari Campak untuk umum.',
-  //       'Kepala Dinas Kebudayaan berharap acara ini meningkatkan minat generasi muda terhadap seni tari tradisional.',
-  //       'Festival ditutup dengan penampilan kolaborasi antara sanggar lokal dan penari muda.',
-  //     ],
-  //   },
-  //   {
-  //     'id': 2,
-  //     'judul': 'Tradisi Nganggung, Simbol Kebersamaan Masyarakat Bangka',
-  //     'tanggal': 'Bangka, 21 Oktober — ',
-  //     'gambar': 'assets/images/tradisiNganggung.png',
-  //     'paragraf': [
-  //       'Tradisi Nganggung merupakan simbol kebersamaan masyarakat Melayu Bangka.',
-  //       'Warga membawa hidangan dari rumah masing-masing menggunakan dulang besar untuk dimakan bersama.',
-  //       'Biasanya diadakan pada perayaan hari besar Islam seperti Maulid Nabi atau Idul Fitri.',
-  //       'Pemerintah daerah terus mendorong pelestarian Nganggung sebagai warisan budaya lokal.',
-  //     ],
-  //   },
-  //   {
-  //     'id': 3,
-  //     'judul': 'Upacara Maras Taun, Syukur atas Hasil Panen',
-  //     'tanggal': 'Bangka, 21 Oktober — ',
-  //     'gambar': 'assets/images/marasTaun.png',
-  //     'paragraf': [
-  //       'Maras Taun adalah upacara adat masyarakat Bangka Belitung sebagai ungkapan rasa syukur atas hasil panen.',
-  //       'Warga berkumpul di balai desa untuk berdoa bersama dan menampilkan kesenian tradisional.',
-  //       'Ada prosesi simbolik “pembersihan kampung” sebagai harapan agar desa terhindar dari marabahaya.',
-  //       'Tradisi ini memperkuat identitas budaya serta menjadi daya tarik wisata budaya.',
-  //     ],
-  //   },
-  // ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

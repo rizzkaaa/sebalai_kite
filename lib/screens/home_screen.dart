@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:uts/screens/auth_screen.dart';
 import 'package:uts/screens/berita_content.dart';
 import 'package:uts/screens/chat_floating_widget.dart';
 import 'package:uts/screens/galeri_content.dart';
@@ -12,6 +11,7 @@ import 'package:uts/screens/tim_content.dart';
 import 'package:uts/services/auth_service.dart';
 import 'package:uts/widgets/footer.dart';
 import 'package:uts/widgets/icon_action_appbar.dart';
+import 'package:uts/widgets/list_tile_drawer.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -76,11 +76,13 @@ class _HomeScreenState extends State<HomeScreen>
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => _authService.toAccountPage()),
+                  MaterialPageRoute(
+                    builder: (context) => _authService.toAccountPage(),
+                  ),
                 );
               },
             ),
-            const SizedBox(width: 10,)
+            const SizedBox(width: 10),
           ],
         ),
         body: Container(
@@ -243,114 +245,41 @@ class _HomeScreenState extends State<HomeScreen>
                   ),
                 ),
               ),
-
-              ListTile(
+              ListTileDrawer(
                 selected: _tabController.index == 0,
-                selectedTileColor: Color(0xFFB39DDB),
-                selectedColor: Colors.white,
-                contentPadding: EdgeInsets.symmetric(
-                  vertical: 8,
-                  horizontal: 20,
-                ),
-                leading: Icon(Icons.home, size: 50),
-                title: Text(
-                  "Beranda",
-                  style: GoogleFonts.judson(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
                 onTap: () => _goToTab(0),
+                icon: Icons.home,
+                title: 'Beranda',
               ),
-              ListTile(
+              ListTileDrawer(
                 selected: _tabController.index == 1,
-                selectedTileColor: Color(0xFFB39DDB),
-                selectedColor: Colors.white,
-                contentPadding: EdgeInsets.symmetric(
-                  vertical: 8,
-                  horizontal: 20,
-                ),
-                leading: Icon(Icons.menu, size: 50),
-                title: Text(
-                  "Katalog",
-                  style: GoogleFonts.judson(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
                 onTap: () => _goToTab(1),
+                icon: Icons.menu,
+                title: 'Katalog',
               ),
-              ListTile(
+              ListTileDrawer(
                 selected: _tabController.index == 2,
-                selectedTileColor: Color(0xFFB39DDB),
-                selectedColor: Colors.white,
-                contentPadding: EdgeInsets.symmetric(
-                  vertical: 8,
-                  horizontal: 20,
-                ),
-                leading: Icon(Icons.newspaper, size: 50),
-                title: Text(
-                  "Berita",
-                  style: GoogleFonts.judson(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
                 onTap: () => _goToTab(2),
+                icon: Icons.newspaper,
+                title: 'Berita',
               ),
-              ListTile(
+              ListTileDrawer(
                 selected: _tabController.index == 3,
-                selectedTileColor: Color(0xFFB39DDB),
-                selectedColor: Colors.white,
-                contentPadding: EdgeInsets.symmetric(
-                  vertical: 8,
-                  horizontal: 20,
-                ),
-                leading: Icon(Icons.photo_library, size: 50),
-                title: Text(
-                  "Galeri",
-                  style: GoogleFonts.judson(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
                 onTap: () => _goToTab(3),
+                icon: Icons.photo_library,
+                title: 'Galeri',
               ),
-              ListTile(
+              ListTileDrawer(
                 selected: _tabController.index == 4,
-                selectedTileColor: Color(0xFFB39DDB),
-                selectedColor: Colors.white,
-                contentPadding: EdgeInsets.symmetric(
-                  vertical: 8,
-                  horizontal: 20,
-                ),
-                leading: Icon(Icons.music_note, size: 50),
-                title: Text(
-                  "Lagu",
-                  style: GoogleFonts.judson(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
                 onTap: () => _goToTab(4),
+                icon: Icons.music_note,
+                title: 'Lagu',
               ),
-              ListTile(
+              ListTileDrawer(
                 selected: _tabController.index == 5,
-                selectedTileColor: Color(0xFFB39DDB),
-                selectedColor: Colors.white,
-                contentPadding: EdgeInsets.symmetric(
-                  vertical: 8,
-                  horizontal: 20,
-                ),
-                leading: Icon(Icons.supervisor_account_sharp, size: 50),
-                title: Text(
-                  "Tim",
-                  style: GoogleFonts.judson(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
                 onTap: () => _goToTab(5),
+                icon: Icons.supervisor_account_sharp,
+                title: 'Tim',
               ),
             ],
           ),
@@ -358,7 +287,7 @@ class _HomeScreenState extends State<HomeScreen>
 
         floatingActionButton: ChatFloatingWidget(),
 
-      bottomNavigationBar: Footer(color: Color(0xFFF4A9C2)),
+        bottomNavigationBar: Footer(color: Color(0xFFF4A9C2)),
       ),
     );
   }

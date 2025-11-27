@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ChatController extends ChangeNotifier {
   final List<Map<String, String>> messages = [];
   bool isLoading = false;
 
-  final String _apiKey = 'AIzaSyA7r3G5FfmoNa3eYneGyN1IGdPhfbZwVeo';
+  final _apiKey = dotenv.env['GEMINI_KEY'];
 
   ChatController() {
     messages.add({

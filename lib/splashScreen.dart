@@ -14,7 +14,6 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    // Pindah ke halaman berikutnya setelah 3 detik
     Future.delayed(const Duration(seconds: 3), () {
       Navigator.pushReplacement(
         context,
