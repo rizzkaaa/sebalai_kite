@@ -1,11 +1,17 @@
+import 'dart:io';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
+import 'package:uts/controllers/auth_controller.dart';
 import 'package:uts/screens/home_screen.dart';
 import 'package:uts/services/auth_service.dart';
 import 'package:uts/widgets/footer.dart';
 import 'package:uts/widgets/icon_action_appbar.dart';
 import 'package:uts/widgets/text_form_field_edit.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:flutter_inset_shadow/flutter_inset_shadow.dart' as inset;
 
 class UserProfileScreen extends StatefulWidget {
@@ -20,6 +26,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   Map<String, dynamic>? userData;
   bool isLoading = true;
   String? error;
+  File? _image;
+  final ImagePicker _picker = ImagePicker();
+  bool _showCameraIcon = false;
 
   @override
   void initState() {
@@ -369,8 +378,77 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     );
   }
 
+  Future<void> _pickImage() async {
+    print("klik!");
+
+    PermissionStatus status = await Permission.photos.request();
+    if (!status.isGranted) {
+      status = await Permission.storage.request();
+    }
+
+    print(status);
+
+    if (!status.isGranted) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Izin akses galeri ditolak')));
+      return;
+    }
+
+    final pickedFile = await _picker.pickImage(
+      source: ImageSource.gallery,
+      maxWidth: 500,
+      maxHeight: 500,
+      imageQuality: 60,
+    );
+
+    if (pickedFile != null) {
+      final file = File(pickedFile.path);
+      final fileSize = await file.length();
+
+      print("📁 File size: ${fileSize / 1024} KB");
+
+      if (fileSize > 500 * 1024) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Gambar terlalu besar, pilih gambar lain')),
+        );
+        return;
+      }
+
+      setState(() {
+        _image = file;
+      });
+    }
+  }
+
+  ImageProvider _getImageProvider(dynamic photo) {
+    if (photo == null || photo.toString().isEmpty) {
+      print("❌ Photo is null or empty");
+      return AssetImage('assets/images/default-profile.png');
+    }
+
+    final photoStr = photo.toString();
+
+    if (photoStr.startsWith('http')) {
+      print("🌐 Photo URL: $photoStr");
+      return NetworkImage(photoStr);
+    }
+
+    try {
+      print("🔄 Decoding base64, length: ${photoStr.length}");
+      final bytes = base64Decode(photoStr);
+      print("✅ Decoded ${bytes.length} bytes");
+      return MemoryImage(bytes);
+    } catch (e) {
+      print("❌ Error decoding base64: $e");
+      return AssetImage('assets/images/default-profile.png');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final uploadPhotoController = context.watch<AuthController>();
+
     if (isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -404,6 +482,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   ),
                   child: ClipPath(
                     clipper: WaveClipperTwo(),
+                    // clipBehavior: Clip.none,
                     child: Container(
                       height: 280,
                       width: double.infinity,
@@ -439,54 +518,178 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     ),
                   ),
                 ),
+
+                // Positioned(
+                //   bottom: -45,
+                //   child: Stack(
+                //     clipBehavior: Clip.none,
+                //     alignment: Alignment.center,
+                //     children: [
+                //       Container(
+                //         decoration: BoxDecoration(
+                //           shape: BoxShape.circle,
+                //           border: Border.all(color: Colors.white, width: 5),
+                //           boxShadow: [
+                //             BoxShadow(
+                //               color: Colors.black.withOpacity(0.25),
+                //               blurRadius: 15,
+                //               spreadRadius: 2,
+                //               offset: Offset(0, 8),
+                //             ),
+                //           ],
+                //         ),
+                //         child: CircleAvatar(
+                //           radius: 60,
+                //           backgroundImage:
+                //               (userData!['photo'] != null &&
+                //                   userData!['photo'].toString().isNotEmpty)
+                //               ? _getImageProvider(userData!['photo'])
+                //               : AssetImage('assets/images/default-profile.png')
+                //                     as ImageProvider,
+                //         ),
+                //       ),
+
+                //       Positioned(
+                //         top: -10,
+                //         child: Container(
+                //           width: 32,
+                //           height: 32,
+                //           decoration: BoxDecoration(
+                //             color: Color(0xFFB1DC99),
+                //             shape: BoxShape.circle,
+                //             border: Border.all(color: Colors.white, width: 2.5),
+                //           ),
+                //           child: IconButton(
+                //             onPressed: () async {
+                //               print("klik!");
+
+                //               await _pickImage();
+
+                //               if (_image != null) {
+                //                 await uploadPhotoController.uploadPhoto(
+                //                   _image!,
+                //                 );
+                //                 await _loadProfile();
+                //               }
+                //             },
+                //             icon: Icon(
+                //               Icons.camera_alt,
+                //               color: Colors.white,
+                //               size: 16,
+                //             ),
+                //           ),
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+                // ),
                 Positioned(
                   bottom: -45,
-                  child: Stack(
-                    clipBehavior: Clip.none,
-                    alignment: Alignment.center,
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(color: Colors.white, width: 5),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.25),
-                              blurRadius: 15,
-                              spreadRadius: 2,
-                              offset: Offset(0, 8),
-                            ),
-                          ],
-                        ),
-                        child: CircleAvatar(
-                          radius: 60,
-                          backgroundImage: AssetImage(
-                            (userData!['photo'] != null &&
-                                    userData!['photo'].toString().isNotEmpty)
-                                ? userData!['photo']
-                                : 'assets/images/default-profile.png',
-                          ),
-                        ),
-                      ),
-
-                      Positioned(
-                        bottom: -8,
-                        child: Container(
-                          width: 32,
-                          height: 32,
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _showCameraIcon = !_showCameraIcon;
+                      });
+                    },
+                    child: Stack(
+                      clipBehavior: Clip.none,
+                      alignment: Alignment.center,
+                      children: [
+                        Container(
                           decoration: BoxDecoration(
-                            color: Color(0xFFB1DC99),
                             shape: BoxShape.circle,
-                            border: Border.all(color: Colors.white, width: 2.5),
+                            border: Border.all(color: Colors.white, width: 5),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.25),
+                                blurRadius: 15,
+                                spreadRadius: 2,
+                                offset: Offset(0, 8),
+                              ),
+                            ],
                           ),
-                          child: Icon(
-                            Icons.camera_alt,
-                            color: Colors.white,
-                            size: 16,
+                          child: CircleAvatar(
+                            radius: 60,
+                            backgroundImage:
+                                (userData!['photo'] != null &&
+                                    userData!['photo'].toString().isNotEmpty)
+                                ? _getImageProvider(userData!['photo'])
+                                : AssetImage(
+                                        'assets/images/default-profile.png',
+                                      )
+                                      as ImageProvider,
                           ),
                         ),
-                      ),
-                    ],
+
+                        AnimatedOpacity(
+                          duration: Duration(milliseconds: 200),
+                          opacity: _showCameraIcon ? 1 : 0,
+                          child: Container(
+                            width: 120,
+                            height: 120,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.black.withOpacity(0.4),
+                            ),
+                          ),
+                        ),
+
+                        AnimatedOpacity(
+                          duration: Duration(milliseconds: 200),
+                          opacity: _showCameraIcon ? 1 : 0,
+                          child: AnimatedScale(
+                            duration: Duration(milliseconds: 300),
+                            scale: _showCameraIcon ? 1 : 0,
+                            curve: Curves.easeOutBack,
+                            child: IgnorePointer(
+                              ignoring: !_showCameraIcon,
+                              child: Container(
+                                width: 37,
+                                height: 37,
+                                decoration: BoxDecoration(
+                                  color: Color(0xFFB1DC99),
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: Colors.white,
+                                    width: 3,
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.3),
+                                      blurRadius: 8,
+                                      offset: Offset(0, 3),
+                                    ),
+                                  ],
+                                ),
+                                child: IconButton(
+                                  padding: EdgeInsets.zero,
+                                  onPressed: () async {
+                                    print("klik kamera!");
+
+                                    await _pickImage();
+
+                                    if (_image != null) {
+                                      await uploadPhotoController.uploadPhoto(
+                                        _image!,
+                                      );
+                                      await _loadProfile();
+                                      setState(() {
+                                        _showCameraIcon = false;
+                                      });
+                                    }
+                                  },
+                                  icon: Icon(
+                                    Icons.camera_alt,
+                                    color: Colors.white,
+                                    size: 16,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],

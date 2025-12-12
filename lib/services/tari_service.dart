@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:http/http.dart';
+// import 'package:http/http.dart';
 import 'package:uts/models/tari_model.dart';
 import 'package:flutter/services.dart';
 

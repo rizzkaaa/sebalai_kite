@@ -1,8 +1,10 @@
 import 'dart:io';
+import 'dart:convert';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uts/screens/auth_screen.dart';
 import 'package:uts/screens/user_profile_screen.dart';
 
@@ -34,6 +36,7 @@ class AuthService {
         "username": username,
         "email": email,
         "photo": "",
+        "role": "user",
       });
       print("Register berhasil");
       return null;
@@ -51,6 +54,7 @@ class AuthService {
   Future<String?> login(String email, String password) async {
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
+
       return null;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
@@ -65,7 +69,15 @@ class AuthService {
 
   Future<DocumentSnapshot> getProfile() async {
     final uid = _auth.currentUser!.uid;
-    return _userRef.doc(uid).get();
+
+    final doc = await _userRef.doc(uid).get();
+    final role = doc["role"];
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('userId', uid);
+    await prefs.setString('userLevel', role);
+
+    return doc;
   }
 
   Future<void> updateProfile({
@@ -97,22 +109,21 @@ class AuthService {
 
   Future<String?> uploadPhoto(File image) async {
     try {
-      final uid = _auth.currentUser!.uid;
-
-      final ref = FirebaseStorage.instance.ref().child(
-        "profile_photos/$uid.jpg",
-      );
-
-      await ref.putFile(image);
-
-      final url = await ref.getDownloadURL();
-
-      await _userRef.doc(uid).update({"photo": url});
-
-      return url;
-    } catch (e) {
-      return null;
-    }
+    final uid = _auth.currentUser!.uid;
+    
+    final bytes = await image.readAsBytes();
+    
+    final base64Image = base64Encode(bytes);
+    
+    await _userRef.doc(uid).update({
+      "photo": base64Image,
+    });
+    print("✅ Photo saved to Firestore!");
+    return base64Image;
+  } catch (e) {
+    print("❌ UPLOAD ERROR: $e");
+    return null;
+  }
   }
 
   Future<void> logout() => _auth.signOut();
