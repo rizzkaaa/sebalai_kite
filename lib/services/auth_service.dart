@@ -42,7 +42,9 @@ class AuthService {
       });
       print("Register berhasil");
 
-      notifService.createWelcomeNotif();
+      notifService.createPersonalNotif(
+        cred.user!.uid, 'welcome'
+      );
 
       return null;
     } on FirebaseAuthException catch (e) {

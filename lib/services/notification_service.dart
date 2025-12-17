@@ -112,18 +112,38 @@ class NotificationService {
     await batch.commit();
   }
 
-  Future<void> createWelcomeNotif() async {
-    final String notifID = "hDS35w3BI2Cr440zSlVk";
+  Future<void> createPersonalNotif(String userID, String type) async {
+    String? notifID;
+    final String welcome = "hDS35w3BI2Cr440zSlVk";
+    final String feedback = "qxjNU8sX1tgFwVGLLru3";
+    final String warning = "nW5VxQ24QjT5WZSbJRQl";
 
-    await _firestore
-        .collection('users')
-        .doc(userId)
-        .collection('notifications')
-        .add({
-          'notifID': notifID,
-          'isRead': false,
-          'time': FieldValue.serverTimestamp(),
-        });
+    if (type == 'welcome') {
+      notifID = welcome;
+    } else if (type == 'feedback') {
+      notifID = feedback;
+    } else if (type == 'warning') {
+      notifID = warning;
+    } else {
+      print('type tidak valid');
+      return;
+    }
+
+    print(notifID);
+    print(userID);
+    try {
+      await _firestore
+          .collection('users')
+          .doc(userID)
+          .collection('notifications')
+          .add({
+            'notifID': notifID,
+            'isRead': false,
+            'time': FieldValue.serverTimestamp(),
+          });
+    } catch (e) {
+      print(e);
+    }
   }
 
   Future<void> deleteNotification(String notifID) async {

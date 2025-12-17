@@ -90,6 +90,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       horizontal: 15,
                       vertical: 8,
                     ),
+                    margin: const EdgeInsets.only(bottom: 20),
                     decoration: inset.BoxDecoration(
                       color: Color(0xFFF8E8ED),
                       borderRadius: BorderRadius.circular(20),

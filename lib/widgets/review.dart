@@ -2,10 +2,12 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uts/models/review_model.dart';
 import 'package:uts/models/user_model.dart';
 import 'package:uts/services/auth_service.dart';
 import 'package:uts/services/review_service.dart';
+import 'package:uts/widgets/icon_action_appbar.dart';
 
 class Review extends StatefulWidget {
   final int idTari;
@@ -19,11 +21,26 @@ class _ReviewState extends State<Review> {
   final ReviewService reviewService = ReviewService();
   final AuthService authService = AuthService();
   late Future<List<ReviewModel>> dataReview;
+  String? userLevel;
 
   @override
   void initState() {
     super.initState();
     dataReview = reviewService.getReviewByIDTari(widget.idTari);
+    _loadUserData();
+  }
+
+  void _refresh() {
+    setState(() {
+      dataReview = reviewService.getReviewByIDTari(widget.idTari);
+    });
+  }
+
+  Future<void> _loadUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userLevel = prefs.getString('userLevel');
+    });
   }
 
   @override
@@ -47,7 +64,6 @@ class _ReviewState extends State<Review> {
               final review = listReview[index];
               final n = review.rating;
               final k = 5 - n;
-              print('$n, $k');
 
               return FutureBuilder<UserModel>(
                 future: authService.getUserByID(review.idUser),
@@ -156,6 +172,23 @@ class _ReviewState extends State<Review> {
                             ],
                           ),
                         ),
+
+                        if (userLevel == 'admin')
+                          Positioned(
+                            bottom: 10,
+                            right: 10,
+
+                            child: IconActionAppbar(
+                              icon: Icons.delete,
+                              onPressed: () async {
+                                await reviewService.deleteReview(
+                                  review.docId!,
+                                  review.idUser,
+                                );
+                                _refresh();
+                              },
+                            ),
+                          ),
                       ],
                     ),
                   );
