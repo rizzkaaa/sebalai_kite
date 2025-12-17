@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:uts/controllers/auth_controller.dart';
+import 'package:uts/models/user_model.dart';
 import 'package:uts/screens/home_screen.dart';
 import 'package:uts/services/auth_service.dart';
 import 'package:uts/widgets/footer.dart';
@@ -23,7 +24,8 @@ class UserProfileScreen extends StatefulWidget {
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
   final AuthService _service = AuthService();
-  Map<String, dynamic>? userData;
+  UserModel? userData;
+
   bool isLoading = true;
   String? error;
   File? _image;
@@ -38,9 +40,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
   Future<void> _loadProfile() async {
     try {
-      final snapshot = await _service.getProfile();
+      final user = await _service.getProfile();
       setState(() {
-        userData = snapshot.data() as Map<String, dynamic>;
+        userData = user;
         isLoading = false;
       });
     } catch (e) {
@@ -58,8 +60,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     final newPasswordController = TextEditingController();
     final oldPasswordController = TextEditingController();
 
-    usernameController.text = userData!['username'];
-    emailController.text = userData!['email'];
+    usernameController.text = userData!.username;
+    emailController.text = userData!.email;
 
     showDialog(
       context: context,
@@ -421,30 +423,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     }
   }
 
-  ImageProvider _getImageProvider(dynamic photo) {
-    if (photo == null || photo.toString().isEmpty) {
-      print("❌ Photo is null or empty");
-      return AssetImage('assets/images/default-profile.png');
-    }
-
-    final photoStr = photo.toString();
-
-    if (photoStr.startsWith('http')) {
-      print("🌐 Photo URL: $photoStr");
-      return NetworkImage(photoStr);
-    }
-
-    try {
-      print("🔄 Decoding base64, length: ${photoStr.length}");
-      final bytes = base64Decode(photoStr);
-      print("✅ Decoded ${bytes.length} bytes");
-      return MemoryImage(bytes);
-    } catch (e) {
-      print("❌ Error decoding base64: $e");
-      return AssetImage('assets/images/default-profile.png');
-    }
-  }
-
+  
   @override
   Widget build(BuildContext context) {
     final uploadPhotoController = context.watch<AuthController>();
@@ -482,7 +461,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   ),
                   child: ClipPath(
                     clipper: WaveClipperTwo(),
-                    // clipBehavior: Clip.none,
                     child: Container(
                       height: 280,
                       width: double.infinity,
@@ -519,70 +497,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   ),
                 ),
 
-                // Positioned(
-                //   bottom: -45,
-                //   child: Stack(
-                //     clipBehavior: Clip.none,
-                //     alignment: Alignment.center,
-                //     children: [
-                //       Container(
-                //         decoration: BoxDecoration(
-                //           shape: BoxShape.circle,
-                //           border: Border.all(color: Colors.white, width: 5),
-                //           boxShadow: [
-                //             BoxShadow(
-                //               color: Colors.black.withOpacity(0.25),
-                //               blurRadius: 15,
-                //               spreadRadius: 2,
-                //               offset: Offset(0, 8),
-                //             ),
-                //           ],
-                //         ),
-                //         child: CircleAvatar(
-                //           radius: 60,
-                //           backgroundImage:
-                //               (userData!['photo'] != null &&
-                //                   userData!['photo'].toString().isNotEmpty)
-                //               ? _getImageProvider(userData!['photo'])
-                //               : AssetImage('assets/images/default-profile.png')
-                //                     as ImageProvider,
-                //         ),
-                //       ),
-
-                //       Positioned(
-                //         top: -10,
-                //         child: Container(
-                //           width: 32,
-                //           height: 32,
-                //           decoration: BoxDecoration(
-                //             color: Color(0xFFB1DC99),
-                //             shape: BoxShape.circle,
-                //             border: Border.all(color: Colors.white, width: 2.5),
-                //           ),
-                //           child: IconButton(
-                //             onPressed: () async {
-                //               print("klik!");
-
-                //               await _pickImage();
-
-                //               if (_image != null) {
-                //                 await uploadPhotoController.uploadPhoto(
-                //                   _image!,
-                //                 );
-                //                 await _loadProfile();
-                //               }
-                //             },
-                //             icon: Icon(
-                //               Icons.camera_alt,
-                //               color: Colors.white,
-                //               size: 16,
-                //             ),
-                //           ),
-                //         ),
-                //       ),
-                //     ],
-                //   ),
-                // ),
                 Positioned(
                   bottom: -45,
                   child: GestureDetector(
@@ -597,7 +511,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       children: [
                         Container(
                           decoration: BoxDecoration(
-                            shape: BoxShape.circle,
+                            shape: BoxShape.circle,  
                             border: Border.all(color: Colors.white, width: 5),
                             boxShadow: [
                               BoxShadow(
@@ -611,9 +525,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           child: CircleAvatar(
                             radius: 60,
                             backgroundImage:
-                                (userData!['photo'] != null &&
-                                    userData!['photo'].toString().isNotEmpty)
-                                ? _getImageProvider(userData!['photo'])
+                                (userData!.photo.toString().isNotEmpty)
+                                ? _service.getImageProvider(userData!.photo)
                                 : AssetImage(
                                         'assets/images/default-profile.png',
                                       )
@@ -711,7 +624,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   ),
                   SizedBox(height: 6),
                   Text(
-                    userData!['username'] ?? '-',
+                    userData!.username,
                     style: GoogleFonts.josefinSans(fontSize: 16),
                   ),
                   SizedBox(height: 10),
@@ -728,7 +641,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   ),
                   SizedBox(height: 6),
                   Text(
-                    userData!['email'] ?? '-',
+                    userData!.email,
                     style: GoogleFonts.josefinSans(fontSize: 16),
                   ),
                   SizedBox(height: 10),

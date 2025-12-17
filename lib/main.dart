@@ -4,6 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:uts/controllers/auth_controller.dart';
 import 'package:uts/controllers/chat_controller.dart';
+import 'package:uts/controllers/notification_controller.dart';
+import 'package:uts/screens/form_review.dart';
 import 'package:uts/screens/home_screen.dart';
 import 'package:uts/splashScreen.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -17,6 +19,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => AuthController()),
         ChangeNotifierProvider(create: (_) => ChatController()),
+        ChangeNotifierProvider(create: (_) => NotificationController()),
       ],
       child: MyApp(),
     ),

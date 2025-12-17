@@ -17,4 +17,6 @@ class LaguService {
       throw Exception("Gagal Memuat Data: $e");
     }
   }
+
+  
 }

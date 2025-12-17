@@ -5,7 +5,9 @@ import 'package:uts/services/berita_service.dart';
 import 'package:uts/widgets/card_berita.dart';
 
 class HomeContent extends StatefulWidget {
-  const HomeContent({super.key});
+  final String searchQuery;
+
+  const HomeContent({super.key, this.searchQuery = ''});
 
   @override
   State<HomeContent> createState() => _HomeContentState();
@@ -18,7 +20,25 @@ class _HomeContentState extends State<HomeContent> {
   @override
   void initState() {
     super.initState();
-    dataBerita = service.fetchLatestBerita();
+    _loadBerita();
+  }
+
+  @override
+  void didUpdateWidget(HomeContent oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.searchQuery != widget.searchQuery) {
+      _loadBerita();
+    }
+  }
+
+  void _loadBerita() {
+    setState(() {
+      if (widget.searchQuery.isEmpty) {
+        dataBerita = service.getLatestBerita();
+      } else {
+        dataBerita = service.searchBeritaByJudul(widget.searchQuery);
+      }
+    });
   }
 
   @override
@@ -34,7 +54,7 @@ class _HomeContentState extends State<HomeContent> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "“Menelusuri Warisan \nBudaya Bangka”",
+                  "Menelusuri Warisan \nBudaya Bangka",
                   style: GoogleFonts.niconne(fontSize: 25),
                 ),
                 Text(
@@ -44,9 +64,7 @@ class _HomeContentState extends State<HomeContent> {
               ],
             ),
           ),
-
           SizedBox(height: 20),
-
           Expanded(
             child: FutureBuilder(
               future: dataBerita,
@@ -54,36 +72,85 @@ class _HomeContentState extends State<HomeContent> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
-                  return Center(child: Text("Error: ${snapshot.error}"));
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.error_outline, size: 64, color: Colors.red),
+                        SizedBox(height: 16),
+                        Text(
+                          "Error: ${snapshot.error}",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.red),
+                        ),
+                        SizedBox(height: 16),
+                        ElevatedButton(
+                          onPressed: _loadBerita,
+                          child: Text('Coba Lagi'),
+                        ),
+                      ],
+                    ),
+                  );
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(child: Text("Tidak ada data"));
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          widget.searchQuery.isEmpty
+                              ? Icons.newspaper
+                              : Icons.search_off,
+                          size: 64,
+                          color: Colors.grey,
+                        ),
+                        SizedBox(height: 16),
+                        Text(
+                          widget.searchQuery.isEmpty
+                              ? "Tidak ada data berita"
+                              : "Tidak ada hasil untuk\n\"${widget.searchQuery}\"",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                        if (widget.searchQuery.isNotEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8),
+                            child: Text(
+                              "Coba kata kunci lain",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey[500],
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  );
                 } else {
                   final listBerita = snapshot.data!;
-
-                  return Expanded(
-                    child: ListView.builder(
-                      itemCount: listBerita.length,
-                      itemBuilder: (context, index) {
-                        final berita = listBerita[index];
-
-                        return SizedBox(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                berita.tanggal,
-                                style: GoogleFonts.judson(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF77426A),
-                                ),
+                  return ListView.builder(
+                    itemCount: listBerita.length,
+                    itemBuilder: (context, index) {
+                      final berita = listBerita[index];
+                      return SizedBox(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              berita.tanggal,
+                              style: GoogleFonts.judson(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF77426A),
                               ),
-                              CardBerita(berita: berita),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
+                            ),
+                            CardBerita(berita: berita),
+                          ],
+                        ),
+                      );
+                    },
                   );
                 }
               },

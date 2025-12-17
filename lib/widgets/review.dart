@@ -1,278 +1,170 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:uts/models/review_model.dart';
+import 'package:uts/models/user_model.dart';
+import 'package:uts/services/auth_service.dart';
+import 'package:uts/services/review_service.dart';
 
-class Review extends StatelessWidget {
+class Review extends StatefulWidget {
+  final int idTari;
+  const Review({super.key, required this.idTari});
+
+  @override
+  State<Review> createState() => _ReviewState();
+}
+
+class _ReviewState extends State<Review> {
+  final ReviewService reviewService = ReviewService();
+  final AuthService authService = AuthService();
+  late Future<List<ReviewModel>> dataReview;
+
+  @override
+  void initState() {
+    super.initState();
+    dataReview = reviewService.getReviewByIDTari(widget.idTari);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Container(
-        padding: EdgeInsets.only(top: 50),
-        child: Row(
-          children: [
-            Container(
-              width: 250,
-              margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 20),
-              decoration: BoxDecoration(
-                color: Color(0xFFF2B8D5),
-                borderRadius: BorderRadius.circular(25),
-              ),
-              child: Stack(
-                children: [
-                  Transform.translate(
-                    offset: const Offset(80, -55),
-                    child: CircleAvatar(
-                      radius: 47,
-                      backgroundColor: Color(0xFFF2B8D5),
-                      child: CircleAvatar(
-                        radius: 42,
-                        backgroundImage: AssetImage('assets/images/av1.jpeg'),
-                      ),
+    return FutureBuilder(
+      future: dataReview,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text("Error: ${snapshot.error}"));
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const Center(child: Text("Tidak ada data"));
+        } else {
+          final listReview = snapshot.data!;
+          return ListView.builder(
+            padding: const EdgeInsets.only(top: 60),
+            itemCount: listReview.length,
+            scrollDirection: Axis.horizontal,
+            itemBuilder: (context, index) {
+              final review = listReview[index];
+              final n = review.rating;
+              final k = 5 - n;
+              print('$n, $k');
+
+              return FutureBuilder<UserModel>(
+                future: authService.getUserByID(review.idUser),
+                builder: (context, userSnap) {
+                  if (userSnap.connectionState == ConnectionState.waiting) {
+                    return const SizedBox(
+                      width: 250,
+                      child: Center(child: CircularProgressIndicator()),
+                    );
+                  }
+                  if (!userSnap.hasData) {
+                    return const SizedBox(width: 250);
+                  }
+
+                  final user = userSnap.data!;
+
+                  return Container(
+                    width: 250,
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 20,
                     ),
-                  ),
-
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(12, 55, 12, 15),
-                    child: Column(
+                    decoration: BoxDecoration(
+                      color: index % 2 == 0
+                          ? Color(0xFFF2B8D5)
+                          : Color(0xFFDBB6E0),
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                    child: Stack(
+                      clipBehavior: Clip.none,
                       children: [
-                        // Rating bintang
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.star,
-                              color: Colors.purple[400],
-                              size: 25,
+                        Transform.translate(
+                          offset: const Offset(80, -55),
+                          child: CircleAvatar(
+                            radius: 47,
+                            backgroundColor: index % 2 == 0
+                                ? Color(0xFFF2B8D5)
+                                : Color(0xFFDBB6E0),
+                            child: CircleAvatar(
+                              radius: 42,
+                              backgroundImage:
+                                  (user.photo.toString().isNotEmpty)
+                                  ? authService.getImageProvider(user.photo)
+                                  : AssetImage(
+                                          'assets/images/default-profile.png',
+                                        )
+                                        as ImageProvider,
                             ),
-                            Icon(
-                              Icons.star,
-                              color: Colors.purple[400],
-                              size: 25,
-                            ),
-                            Icon(
-                              Icons.star,
-                              color: Colors.purple[400],
-                              size: 25,
-                            ),
-                            Icon(
-                              Icons.star,
-                              color: Colors.purple[400],
-                              size: 25,
-                            ),
-                            Icon(
-                              Icons.star_border,
-                              color: Colors.purple[400],
-                              size: 25,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-
-                        // Judul tebal
-                        Text(
-                          "Wow, sekali !!",
-                          style: GoogleFonts.judson(
-                            fontSize: 16,
-                            color: Colors.black87,
-                            fontWeight: FontWeight.bold,
                           ),
-                          textAlign: TextAlign.center,
                         ),
-                        const SizedBox(height: 8),
 
-                        // Isi review
-                        Text(
-                          "Tari Zapin menurut saya sangat indah karena gerakannya lembut dan mencerminkan keanggunan budaya Melayu Bangka Belitung.",
-                          textAlign: TextAlign.justify,
-                          style: GoogleFonts.namdhinggo(
-                            fontSize: 12,
-                            color: Colors.black87,
-                            height: 1.4,
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(12, 40, 12, 15),
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  for (var i = 0; i < n; i++)
+                                    Icon(
+                                      Icons.star,
+                                      color: Color(0xFFD088BE),
+                                      size: 30,
+                                    ),
+
+                                  for (var i = 0; i < k; i++)
+                                    Icon(
+                                      Icons.star_border,
+                                      color: Color(0xFFD088BE),
+                                      size: 30,
+                                    ),
+                                ],
+                              ),
+                              const SizedBox(height: 8),
+
+                              Text(
+                                user.username,
+                                style: GoogleFonts.judson(
+                                  fontSize: 20,
+                                  color: Colors.black87,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 3),
+
+                              const Divider(
+                                color: Color(0xFFD088BE),
+                                thickness: 2,
+                              ),
+
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                ),
+                                child: Text(
+                                  review.deskripsi,
+                                  textAlign: TextAlign.justify,
+                                  style: GoogleFonts.namdhinggo(
+                                    fontSize: 12,
+                                    color: Colors.black87,
+                                    height: 1.4,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
                     ),
-                  ),
-                ],
-              ),
-            ),
-
-            Container(
-              width: 250,
-              margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 20),
-              decoration: BoxDecoration(
-                color: Color(0xFFDBB6E0),
-                borderRadius: BorderRadius.circular(25),
-              ),
-              child: Stack(
-                children: [
-                  Transform.translate(
-                    offset: const Offset(80, -55),
-                    child: CircleAvatar(
-                      radius: 47,
-                      backgroundColor: Color(0xFFDBB6E0),
-                      child: CircleAvatar(
-                        radius: 42,
-                        backgroundImage: AssetImage('assets/images/av2.jpeg'),
-                      ),
-                    ),
-                  ),
-
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(12, 55, 12, 15),
-                    child: Column(
-                      children: [
-                        // Rating bintang
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.star,
-                              color: Colors.purple[400],
-                              size: 25,
-                            ),
-                            Icon(
-                              Icons.star,
-                              color: Colors.purple[400],
-                              size: 25,
-                            ),
-                            Icon(
-                              Icons.star,
-                              color: Colors.purple[400],
-                              size: 25,
-                            ),
-                            Icon(
-                              Icons.star,
-                              color: Colors.purple[400],
-                              size: 25,
-                            ),
-                            Icon(
-                              Icons.star_border,
-                              color: Colors.purple[400],
-                              size: 25,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-
-                        // Judul tebal
-                        Text(
-                          "Wow, sekali !!",
-                          style: GoogleFonts.judson(
-                            fontSize: 16,
-                            color: Colors.black87,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 8),
-
-                        // Isi review
-                        Text(
-                          "Tari Zapin menurut saya sangat indah karena gerakannya lembut dan mencerminkan keanggunan budaya Melayu Bangka Belitung.",
-                          textAlign: TextAlign.justify,
-                          style: GoogleFonts.namdhinggo(
-                            fontSize: 12,
-                            color: Colors.black87,
-                            height: 1.4,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            Container(
-              width: 250,
-              margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 20),
-              decoration: BoxDecoration(
-                color: Color(0xFFF2B8D5),
-                borderRadius: BorderRadius.circular(25),
-              ),
-              child: Stack(
-                children: [
-                  Transform.translate(
-                    offset: const Offset(80, -55),
-                    child: CircleAvatar(
-                      radius: 47,
-                      backgroundColor: Color(0xFFF2B8D5),
-                      child: CircleAvatar(
-                        radius: 42,
-                        backgroundImage: AssetImage('assets/images/av3.jpeg'),
-                      ),
-                    ),
-                  ),
-
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(12, 55, 12, 15),
-                    child: Column(
-                      children: [
-                        // Rating bintang
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.star,
-                              color: Colors.purple[400],
-                              size: 25,
-                            ),
-                            Icon(
-                              Icons.star,
-                              color: Colors.purple[400],
-                              size: 25,
-                            ),
-                            Icon(
-                              Icons.star,
-                              color: Colors.purple[400],
-                              size: 25,
-                            ),
-                            Icon(
-                              Icons.star,
-                              color: Colors.purple[400],
-                              size: 25,
-                            ),
-                            Icon(
-                              Icons.star_border,
-                              color: Colors.purple[400],
-                              size: 25,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-
-                        // Judul tebal
-                        Text(
-                          "Wow, sekali !!",
-                          style: GoogleFonts.judson(
-                            fontSize: 16,
-                            color: Colors.black87,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 8),
-
-                        // Isi review
-                        Text(
-                          "Tari Zapin menurut saya sangat indah karena gerakannya lembut dan mencerminkan keanggunan budaya Melayu Bangka Belitung.",
-                          textAlign: TextAlign.justify,
-                          style: GoogleFonts.namdhinggo(
-                            fontSize: 12,
-                            color: Colors.black87,
-                            height: 1.4,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
+                  );
+                },
+              );
+            },
+          );
+        }
+      },
     );
   }
 }

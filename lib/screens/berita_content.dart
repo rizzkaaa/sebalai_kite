@@ -18,53 +18,62 @@ class _BeritaContentState extends State<BeritaContent> {
   @override
   void initState() {
     super.initState();
-    dataBerita = service.fetchBerita();
+    dataBerita = service.getAllBerita();
   }
+
+// Future<void> addBerita() async{
+//   await service.createBerita(berita)
+// }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
       color: Colors.white,
-      child: FutureBuilder(
-        future: dataBerita,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text("Error: ${snapshot.error}"));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text("Tidak ada data"));
-          } else {
-            final listBerita = snapshot.data!;
+      child: Column(
+        children: [
+          // Expanded(child: ElevatedButton(onPressed: onPressed, child: child)),
+          FutureBuilder(
+            future: dataBerita,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text("Error: ${snapshot.error}"));
+              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return const Center(child: Text("Tidak ada data"));
+              } else {
+                final listBerita = snapshot.data!;
 
-            return Expanded(
-              child: ListView.builder(
-                itemCount: listBerita.length,
-                itemBuilder: (context, index) {
-                  final berita = listBerita[index];
+                return Expanded(
+                  child: ListView.builder(
+                    itemCount: listBerita.length,
+                    itemBuilder: (context, index) {
+                      final berita = listBerita[index];
 
-                  return SizedBox(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          berita.tanggal,
-                          style: GoogleFonts.judson(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF77426A),
-                          ),
+                      return SizedBox(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              berita.tanggal,
+                              style: GoogleFonts.judson(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF77426A),
+                              ),
+                            ),
+                            CardBerita(berita: berita),
+                          ],
                         ),
-                        CardBerita(berita: berita),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            );
-          }
-        },
+                      );
+                    },
+                  ),
+                );
+              }
+            },
+          ),
+        ],
       ),
     );
   }

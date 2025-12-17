@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:uts/controllers/notification_controller.dart';
 import 'package:uts/screens/berita_content.dart';
 import 'package:uts/screens/chat_floating_widget.dart';
 import 'package:uts/screens/galeri_content.dart';
@@ -7,6 +9,7 @@ import 'package:uts/screens/home_content.dart';
 import 'package:uts/screens/katalog_content.dart';
 import 'package:uts/screens/maps_screen.dart';
 import 'package:uts/screens/musik_content.dart';
+import 'package:uts/screens/notification_screen.dart';
 import 'package:uts/screens/tim_content.dart';
 import 'package:uts/services/auth_service.dart';
 import 'package:uts/widgets/footer.dart';
@@ -24,6 +27,8 @@ class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final AuthService _authService = AuthService();
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = ''; 
 
   @override
   void initState() {
@@ -37,6 +42,7 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   void dispose() {
     _tabController.dispose();
+    _searchController.dispose();
     super.dispose();
   }
 
@@ -47,8 +53,25 @@ class _HomeScreenState extends State<HomeScreen>
     Navigator.pop(context);
   }
 
+  void _performSearch() {
+    final query = _searchController.text.trim();
+    setState(() {
+      _searchQuery = query;
+      _tabController.animateTo(0);
+    });
+  }
+
+  void _clearSearch() {
+    setState(() {
+      _searchController.clear();
+      _searchQuery = '';
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final controller = context.watch<NotificationController>();
+
     return DefaultTabController(
       length: 6,
       child: Scaffold(
@@ -58,10 +81,46 @@ class _HomeScreenState extends State<HomeScreen>
           ),
           backgroundColor: Color(0xFFEBC5EB),
           actions: [
-            IconActionAppbar(
-              icon: Icons.notifications_none_outlined,
-              onPressed: () {},
+            StreamBuilder<int>(
+              stream: controller.countUnRead,
+              builder: (context, snapshot) {
+                final unreadCount = snapshot.data ?? 0;
+
+                return Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    IconActionAppbar(
+                      icon: Icons.notifications_none_outlined,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => NotificationScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    if (unreadCount > 0)
+                      Positioned(
+                        top: -5,
+                        right: 0,
+                        child: Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            color: Color(0xFFB832B6),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Text(
+                            '$unreadCount',
+                            style: TextStyle(color: Colors.white, fontSize: 12),
+                          ),
+                        ),
+                      ),
+                  ],
+                );
+              },
             ),
+
             IconActionAppbar(
               icon: Icons.map_outlined,
               onPressed: () {
@@ -109,7 +168,6 @@ class _HomeScreenState extends State<HomeScreen>
                                     ..color = const Color(0xFFB832B6),
                                 ),
                               ),
-
                               Text(
                                 "Welcome,",
                                 style: GoogleFonts.lobster(
@@ -143,17 +201,33 @@ class _HomeScreenState extends State<HomeScreen>
                           children: [
                             Expanded(
                               child: TextField(
+                                controller: _searchController,
                                 decoration: InputDecoration(
-                                  hintText: 'Search',
+                                  hintText: 'Cari berita...',
                                   border: InputBorder.none,
                                 ),
+                                onChanged: (value) {
+                                  setState(() {});
+                                },
+                                onSubmitted: (value) {
+                                  _performSearch();
+                                },
                               ),
                             ),
-                            Icon(
-                              Icons.search,
-                              color: Color(0xFFEBC5EB),
-                              size: 30,
-                            ),
+                            _searchController.text.isNotEmpty
+                                ? IconButton(
+                                    icon: Icon(
+                                      Icons.clear,
+                                      color: Color(0xFFB832B6),
+                                      size: 24,
+                                    ),
+                                    onPressed: _clearSearch,
+                                  )
+                                : Icon(
+                                    Icons.search,
+                                    color: Color(0xFFEBC5EB),
+                                    size: 30,
+                                  ),
                           ],
                         ),
                       ),
@@ -161,6 +235,7 @@ class _HomeScreenState extends State<HomeScreen>
                   ],
                 ),
               ),
+
 
               Container(
                 decoration: BoxDecoration(
@@ -197,7 +272,8 @@ class _HomeScreenState extends State<HomeScreen>
                 child: TabBarView(
                   controller: _tabController,
                   children: [
-                    HomeContent(),
+                    // Pass searchQuery ke HomeContent
+                    HomeContent(searchQuery: _searchQuery),
                     KatalogContent(),
                     BeritaContent(),
                     GaleriContent(),

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uts/screens/auth_screen.dart';
 import 'package:uts/screens/form_review.dart';
+import 'package:uts/services/review_service.dart';
 import 'package:uts/widgets/icon_action_appbar.dart';
 import 'package:uts/widgets/review.dart';
 import 'package:uts/services/tari_service.dart';
@@ -8,7 +11,7 @@ import 'package:uts/models/tari_model.dart';
 
 class DetailTari extends StatefulWidget {
   final int idTari;
-  DetailTari({Key? key, required this.idTari}) : super(key: key);
+  const DetailTari({super.key, required this.idTari});
 
   @override
   State<DetailTari> createState() => _DetailTariState();
@@ -16,11 +19,30 @@ class DetailTari extends StatefulWidget {
 
 class _DetailTariState extends State<DetailTari> {
   late Future<List<TariModel>> futureTari;
+  final ReviewService reviewService = ReviewService();
+  String? idUser;
+  String? userLevel;
 
   @override
   void initState() {
     super.initState();
     futureTari = TariService().fetchTari();
+  }
+
+  void _refresh() {
+    setState(() {
+      futureTari = TariService().fetchTari();
+    });
+  }
+
+  Future<void> _loadUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      idUser = prefs.getString('userId');
+      userLevel = prefs.getString('userLevel');
+      print(idUser);
+      print(userLevel);
+    });
   }
 
   @override
@@ -50,7 +72,6 @@ class _DetailTariState extends State<DetailTari> {
           body: SingleChildScrollView(
             child: Stack(
               children: [
-                // FOTO ATAS
                 Container(
                   padding: EdgeInsets.zero,
                   height: 280,
@@ -143,8 +164,8 @@ class _DetailTariState extends State<DetailTari> {
                               ),
                               textAlign: TextAlign.justify,
                             ),
-
                             Divider(color: Color(0xFFCBC2C2), thickness: 2),
+
                             Padding(
                               padding: EdgeInsets.symmetric(vertical: 10),
                               child: Row(
@@ -152,7 +173,7 @@ class _DetailTariState extends State<DetailTari> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    "Review",
+                                    "Ulasan",
                                     style: GoogleFonts.odorMeanChey(
                                       fontSize: 30,
                                       color: Color(0xFFE094A7),
@@ -169,16 +190,48 @@ class _DetailTariState extends State<DetailTari> {
                                       ),
                                     ),
                                     child: ElevatedButton(
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                FormPenilaianTari(
-                                                  idTari: widget.idTari,
+                                      onPressed: () async {
+                                        await _loadUserData();
+
+                                        if (idUser != null) {
+                                          final checkUser = await reviewService
+                                              .hasReviewed(
+                                                idUser!,
+                                                widget.idTari,
+                                              );
+
+                                          if (checkUser) {
+                                            ScaffoldMessenger.of(
+                                              context,
+                                            ).showSnackBar(
+                                              const SnackBar(
+                                                content: Text(
+                                                  "Anda telah memberi review pada Tari ini",
                                                 ),
-                                          ),
-                                        );
+                                              ),
+                                            );
+                                            return;
+                                          }
+
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  FormPenilaianTari(
+                                                    idTari: widget.idTari,
+                                                    idUser: idUser!,
+                                                  ),
+                                            ),
+                                          ).then((_) => _refresh());
+                                        } else {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  AuthScreen(),
+                                            ),
+                                          );
+                                        }
                                       },
                                       style: ElevatedButton.styleFrom(
                                         padding: EdgeInsets.symmetric(
@@ -187,7 +240,7 @@ class _DetailTariState extends State<DetailTari> {
                                         backgroundColor: Color(0xFFC3A4C7),
                                       ),
                                       child: Text(
-                                        "Beri Review",
+                                        "Beri Ulasan",
                                         style: GoogleFonts.judson(
                                           color: Colors.white,
                                           fontSize: 16,
@@ -201,7 +254,10 @@ class _DetailTariState extends State<DetailTari> {
                             ),
                             Divider(color: Color(0xFFCBC2C2), thickness: 2),
 
-                            Review(),
+                            Container(
+                              height: 320,
+                              child: Review(idTari: widget.idTari),
+                            ),
                           ],
                         ),
                       ),
