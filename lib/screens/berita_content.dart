@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:uts/models/berita_model.dart';
-import 'package:uts/screens/form_berita.dart';
 import 'package:uts/widgets/card_berita.dart';
 import 'package:uts/services/berita_service.dart';
 
@@ -19,98 +18,53 @@ class _BeritaContentState extends State<BeritaContent> {
   @override
   void initState() {
     super.initState();
-    dataBerita = service.getAllBerita();
+    dataBerita = service.fetchBerita();
   }
-
-  // Future<void> addBerita() async{
-  //   await service.createBerita(berita)
-  // }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
       color: Colors.white,
-      child: Column(
-        children: [
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Color(0xFFF4A9C2),
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-            ),
+      child: FutureBuilder(
+        future: dataBerita,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text("Error: ${snapshot.error}"));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text("Tidak ada data"));
+          } else {
+            final listBerita = snapshot.data!;
 
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => FormBerita(),
-                ),
-              );
-            },
-            child: SizedBox(
-              width: double.infinity,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.add, size: 25, color: Colors.white),
-                  const SizedBox(width: 10),
-                  Text(
-                    "Tambah Berita Baru",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 20),
-          FutureBuilder(
-            future: dataBerita,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (snapshot.hasError) {
-                return Center(child: Text("Error: ${snapshot.error}"));
-              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return const Center(child: Text("Tidak ada data"));
-              } else {
-                final listBerita = snapshot.data!;
+            return Expanded(
+              child: ListView.builder(
+                itemCount: listBerita.length,
+                itemBuilder: (context, index) {
+                  final berita = listBerita[index];
 
-                return Expanded(
-                  child: ListView.builder(
-                    itemCount: listBerita.length,
-                    itemBuilder: (context, index) {
-                      final berita = listBerita[index];
-
-                      return SizedBox(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              berita.tanggal,
-                              style: GoogleFonts.judson(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF77426A),
-                              ),
-                            ),
-                            CardBerita(berita: berita),
-                          ],
+                  return SizedBox(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          berita.tanggal,
+                          style: GoogleFonts.judson(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF77426A),
+                          ),
                         ),
-                      );
-                    },
-                  ),
-                );
-              }
-            },
-          ),
-        ],
+                        CardBerita(berita: berita),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            );
+          }
+        },
       ),
     );
   }

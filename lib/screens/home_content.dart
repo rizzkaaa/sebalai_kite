@@ -34,7 +34,7 @@ class _HomeContentState extends State<HomeContent> {
   void _loadBerita() {
     setState(() {
       if (widget.searchQuery.isEmpty) {
-        dataBerita = service.getLatestBerita();
+        dataBerita = service.fetchLatestBerita();
       } else {
         dataBerita = service.searchBeritaByJudul(widget.searchQuery);
       }
