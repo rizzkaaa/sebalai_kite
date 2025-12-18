@@ -5,12 +5,17 @@ class TextFormFieldFormInput extends StatelessWidget {
   final TextEditingController controller;
   final String label;
   final int? maxLine;
+  final TextInputType? number;
+  final ValueChanged<String>? onChanged;
+
 
   const TextFormFieldFormInput({
     super.key,
     required this.controller,
     required this.label,
     this.maxLine,
+    this.number,
+    this.onChanged,
   });
 
   @override
@@ -30,6 +35,8 @@ class TextFormFieldFormInput extends StatelessWidget {
         TextFormField(
           controller: controller,
           maxLines: maxLine ?? 1,
+          keyboardType: number ?? TextInputType.text,
+          onChanged: onChanged,
           style: TextStyle(
             color: Color(0xFFAB79AC),
           ),

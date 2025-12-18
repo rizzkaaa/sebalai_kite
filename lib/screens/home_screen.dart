@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uts/controllers/notification_controller.dart';
+import 'package:uts/controllers/saran_controller.dart';
 import 'package:uts/screens/berita_content.dart';
 import 'package:uts/screens/chat_floating_widget.dart';
 import 'package:uts/screens/galeri_content.dart';
@@ -10,6 +12,7 @@ import 'package:uts/screens/katalog_content.dart';
 import 'package:uts/screens/maps_screen.dart';
 import 'package:uts/screens/musik_content.dart';
 import 'package:uts/screens/notification_screen.dart';
+import 'package:uts/screens/saran_screen.dart';
 import 'package:uts/screens/tim_content.dart';
 import 'package:uts/services/auth_service.dart';
 import 'package:uts/widgets/footer.dart';
@@ -28,7 +31,9 @@ class _HomeScreenState extends State<HomeScreen>
   late TabController _tabController;
   final AuthService _authService = AuthService();
   final TextEditingController _searchController = TextEditingController();
-  String _searchQuery = ''; 
+  String _searchQuery = '';
+  String? userID;
+  String? userLevel;
 
   @override
   void initState() {
@@ -37,6 +42,7 @@ class _HomeScreenState extends State<HomeScreen>
     _tabController.addListener(() {
       setState(() {});
     });
+    _loadUserData();
   }
 
   @override
@@ -68,9 +74,20 @@ class _HomeScreenState extends State<HomeScreen>
     });
   }
 
+  Future<void> _loadUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userID = prefs.getString('userId');
+      userLevel = prefs.getString('userLevel');
+      print(userID);
+      print(userLevel);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final controller = context.watch<NotificationController>();
+    final notifController = context.watch<NotificationController>();
+    final saranController = context.watch<SaranController>();
 
     return DefaultTabController(
       length: 6,
@@ -81,45 +98,91 @@ class _HomeScreenState extends State<HomeScreen>
           ),
           backgroundColor: Color(0xFFEBC5EB),
           actions: [
-            StreamBuilder<int>(
-              stream: controller.countUnRead,
-              builder: (context, snapshot) {
-                final unreadCount = snapshot.data ?? 0;
+            userLevel == 'admin'
+                ? StreamBuilder<int>(
+                    stream: saranController.countUnRead,
+                    builder: (context, snapshot) {
+                      final unreadCount = snapshot.data ?? 0;
 
-                return Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    IconActionAppbar(
-                      icon: Icons.notifications_none_outlined,
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => NotificationScreen(),
+                      return Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          IconActionAppbar(
+                            icon: Icons.inbox_outlined,
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SaranScreen(),
+                                ),
+                              );
+                            },
                           ),
-                        );
-                      },
-                    ),
-                    if (unreadCount > 0)
-                      Positioned(
-                        top: -5,
-                        right: 0,
-                        child: Container(
-                          padding: const EdgeInsets.all(6),
-                          decoration: BoxDecoration(
-                            color: Color(0xFFB832B6),
-                            shape: BoxShape.circle,
+                          if (unreadCount > 0)
+                            Positioned(
+                              top: -5,
+                              right: 0,
+                              child: Container(
+                                padding: const EdgeInsets.all(6),
+                                decoration: BoxDecoration(
+                                  color: Color(0xFFB832B6),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Text(
+                                  '$unreadCount',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
+                            ),
+                        ],
+                      );
+                    },
+                  )
+                : StreamBuilder<int>(
+                    stream: notifController.countUnRead,
+                    builder: (context, snapshot) {
+                      final unreadCount = snapshot.data ?? 0;
+
+                      return Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          IconActionAppbar(
+                            icon: Icons.notifications_none_outlined,
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => NotificationScreen(),
+                                ),
+                              );
+                            },
                           ),
-                          child: Text(
-                            '$unreadCount',
-                            style: TextStyle(color: Colors.white, fontSize: 12),
-                          ),
-                        ),
-                      ),
-                  ],
-                );
-              },
-            ),
+                          if (unreadCount > 0)
+                            Positioned(
+                              top: -5,
+                              right: 0,
+                              child: Container(
+                                padding: const EdgeInsets.all(6),
+                                decoration: BoxDecoration(
+                                  color: Color(0xFFB832B6),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Text(
+                                  '$unreadCount',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
+                            ),
+                        ],
+                      );
+                    },
+                  ),
 
             IconActionAppbar(
               icon: Icons.map_outlined,
@@ -236,7 +299,6 @@ class _HomeScreenState extends State<HomeScreen>
                 ),
               ),
 
-
               Container(
                 decoration: BoxDecoration(
                   color: Color(0xFFF4A9C2),
@@ -272,7 +334,6 @@ class _HomeScreenState extends State<HomeScreen>
                 child: TabBarView(
                   controller: _tabController,
                   children: [
-                    // Pass searchQuery ke HomeContent
                     HomeContent(searchQuery: _searchQuery),
                     KatalogContent(),
                     BeritaContent(),

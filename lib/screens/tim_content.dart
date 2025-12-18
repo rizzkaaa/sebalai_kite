@@ -1,8 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uts/screens/form_saran.dart';
 
+class TimContent extends StatefulWidget {
+  const TimContent({super.key});
 
-class TimContent extends StatelessWidget {
+  @override
+  State<TimContent> createState() => _TimContentState();
+}
+
+class _TimContentState extends State<TimContent> {
+  String? idUser;
+  String? userLevel;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      idUser = prefs.getString('userId');
+      userLevel = prefs.getString('userLevel');
+      print(idUser);
+      print(userLevel);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,7 +40,6 @@ class TimContent extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              
               Text(
                 'Meet Our Team',
                 style: GoogleFonts.niconne(
@@ -26,7 +52,7 @@ class TimContent extends StatelessWidget {
               // Deskripsi
               Text(
                 'Kami adalah sekelompok mahasiswa yang bekerja sama dalam satu tujuan — '
-                    'menyediakan proyek ini dengan semangat belajar, kerja sama, dan tanggung jawab bersama.',
+                'menyediakan proyek ini dengan semangat belajar, kerja sama, dan tanggung jawab bersama.',
                 textAlign: TextAlign.justify,
                 style: TextStyle(
                   fontSize: 12.5,
@@ -43,7 +69,7 @@ class TimContent extends StatelessWidget {
                 color: Color(0xFFD9D9D9),
               ),
               SizedBox(height: 28),
-              
+
               Center(
                 child: Text(
                   'Team Sebalai Kite',
@@ -54,7 +80,7 @@ class TimContent extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 40),
-              
+
               Row(
                 children: [
                   // Kartu 1 - Alya
@@ -96,16 +122,61 @@ class TimContent extends StatelessWidget {
                   ),
                 ],
               ),
+
+              if (userLevel != 'admin')
+                Column(
+                  children: [
+                    SizedBox(height: 32),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xFFF4A9C2),
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => FormSaran(idUser: idUser!),
+                          ),
+                        );
+                      },
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.inbox_rounded,
+                              size: 25,
+                              color: Colors.white,
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              "Kotak Saran",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               SizedBox(height: 32),
 
-              // Garis pembatas
               Container(
                 height: 1,
                 width: double.infinity,
                 color: Color(0xFFD9D9D9),
               ),
               SizedBox(height: 28),
-              
+
               Text(
                 'Our Motivation',
                 style: GoogleFonts.niconne(
@@ -118,7 +189,7 @@ class TimContent extends StatelessWidget {
               // Deskripsi Motivasi
               Text(
                 'Kami ingin mengenalkan dan melestarikan budaya Bangsa dengan cara yang lebih modern dan menarik. '
-                    'Lewat aplikasi ini, kami berharap generasi muda bisa lebih bangga dan terlibat pada budaya daerahnya sendiri.',
+                'Lewat aplikasi ini, kami berharap generasi muda bisa lebih bangga dan terlibat pada budaya daerahnya sendiri.',
                 textAlign: TextAlign.justify,
                 style: TextStyle(
                   fontSize: 12.5,
@@ -126,6 +197,14 @@ class TimContent extends StatelessWidget {
                   color: Color(0xFF2D2D2D),
                 ),
               ),
+              SizedBox(height: 14),
+
+              Container(
+                height: 1,
+                width: double.infinity,
+                color: Color(0xFFD9D9D9),
+              ),
+              SizedBox(height: 28),
             ],
           ),
         ),
@@ -250,7 +329,11 @@ class TimCard extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.videogame_asset_outlined, size: 13, color: color),
+                    Icon(
+                      Icons.videogame_asset_outlined,
+                      size: 13,
+                      color: color,
+                    ),
                     SizedBox(width: 7),
                     Expanded(
                       child: Text(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:uts/models/berita_model.dart';
+import 'package:uts/screens/form_berita.dart';
 import 'package:uts/widgets/card_berita.dart';
 import 'package:uts/services/berita_service.dart';
 
@@ -21,9 +22,9 @@ class _BeritaContentState extends State<BeritaContent> {
     dataBerita = service.getAllBerita();
   }
 
-// Future<void> addBerita() async{
-//   await service.createBerita(berita)
-// }
+  // Future<void> addBerita() async{
+  //   await service.createBerita(berita)
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +33,43 @@ class _BeritaContentState extends State<BeritaContent> {
       color: Colors.white,
       child: Column(
         children: [
-          // Expanded(child: ElevatedButton(onPressed: onPressed, child: child)),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Color(0xFFF4A9C2),
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+            ),
+
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => FormBerita(),
+                ),
+              );
+            },
+            child: SizedBox(
+              width: double.infinity,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.add, size: 25, color: Colors.white),
+                  const SizedBox(width: 10),
+                  Text(
+                    "Tambah Berita Baru",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
           FutureBuilder(
             future: dataBerita,
             builder: (context, snapshot) {

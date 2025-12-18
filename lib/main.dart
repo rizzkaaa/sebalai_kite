@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:uts/controllers/auth_controller.dart';
 import 'package:uts/controllers/chat_controller.dart';
 import 'package:uts/controllers/notification_controller.dart';
+import 'package:uts/controllers/saran_controller.dart';
 import 'package:uts/screens/form_review.dart';
 import 'package:uts/screens/home_screen.dart';
 import 'package:uts/splashScreen.dart';
@@ -20,6 +21,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => AuthController()),
         ChangeNotifierProvider(create: (_) => ChatController()),
         ChangeNotifierProvider(create: (_) => NotificationController()),
+        ChangeNotifierProvider(create: (_) => SaranController()),
       ],
       child: MyApp(),
     ),
