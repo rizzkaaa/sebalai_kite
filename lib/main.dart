@@ -6,8 +6,6 @@ import 'package:uts/controllers/auth_controller.dart';
 import 'package:uts/controllers/chat_controller.dart';
 import 'package:uts/controllers/notification_controller.dart';
 import 'package:uts/controllers/saran_controller.dart';
-import 'package:uts/screens/form_review.dart';
-import 'package:uts/screens/home_screen.dart';
 import 'package:uts/splashScreen.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -37,7 +35,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(textTheme: GoogleFonts.montagaTextTheme()),
       debugShowCheckedModeBanner: false,
-      home: HomeScreen(),
+      home: SplashScreen(),
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uts/screens/auth_screen.dart';
 import 'package:uts/screens/form_saran.dart';
 
 class TimContent extends StatefulWidget {
@@ -25,8 +26,6 @@ class _TimContentState extends State<TimContent> {
     setState(() {
       idUser = prefs.getString('userId');
       userLevel = prefs.getString('userLevel');
-      print(idUser);
-      print(userLevel);
     });
   }
 
@@ -136,12 +135,21 @@ class _TimContentState extends State<TimContent> {
                         ),
                       ),
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => FormSaran(idUser: idUser!),
-                          ),
-                        );
+                        if (idUser == null || idUser == '') {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AuthScreen(),
+                            ),
+                          );
+                        } else {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => FormSaran(idUser: idUser!),
+                            ),
+                          );
+                        }
                       },
                       child: SizedBox(
                         width: double.infinity,
