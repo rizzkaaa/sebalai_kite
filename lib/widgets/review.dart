@@ -179,6 +179,7 @@ class _ReviewState extends State<Review> {
                             right: 10,
 
                             child: IconActionAppbar(
+                              tooltip: "hapus",
                               icon: Icons.delete,
                               onPressed: () async {
                                 await reviewService.deleteReview(

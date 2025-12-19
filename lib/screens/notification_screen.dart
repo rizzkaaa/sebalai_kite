@@ -40,6 +40,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
         leading: Padding(
           padding: const EdgeInsets.all(8),
           child: IconActionAppbar(
+            tooltip: "kembali",
             icon: Icons.reply,
             onPressed: () => Navigator.pop(context),
           ),

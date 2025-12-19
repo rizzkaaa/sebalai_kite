@@ -132,6 +132,12 @@ class _FormPenilaianTariState extends State<FormPenilaianTari> {
               controller: _deskripsiController,
               label: "Deskripsi:",
               maxLine: 5,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return "Berikan Deskripsi";
+                }
+                return null;
+              },
             ),
           ],
         ),

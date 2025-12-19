@@ -93,6 +93,7 @@ class _DetailTariState extends State<DetailTari> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             IconActionAppbar(
+                              tooltip: "kembali",
                               icon: Icons.reply,
                               onPressed: () {
                                 Navigator.pop(context);

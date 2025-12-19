@@ -6,6 +6,7 @@ class UserModel {
   final String email;
   final String photo;
   final String role;
+  final bool isActive;
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
@@ -15,6 +16,7 @@ class UserModel {
     required this.email,
     required this.photo,
     required this.role,
+    required this.isActive,
     this.createdAt,
     this.updatedAt,
   });
@@ -25,6 +27,7 @@ class UserModel {
       email: json['email'] ?? '-',
       photo: json['photo'] ?? '-',
       role: json['role'] ?? '-',
+      isActive: json['isActive'] ?? '-',
     );
   }
 
@@ -36,6 +39,7 @@ class UserModel {
       email: data['email'] ?? '-',
       photo: data['photo'] ?? '-',
       role: data['role'] ?? '-',
+      isActive: data['isActive'] ?? '-',
       createdAt: (data['createdAt'] as Timestamp?)?.toDate(),
       updatedAt: (data['updatedAt'] as Timestamp?)?.toDate(),
     );
@@ -47,6 +51,7 @@ class UserModel {
       'email': email,
       'photo': photo,
       'role': role,
+      'isActive': isActive,
     };
   }
 
@@ -56,6 +61,7 @@ class UserModel {
       'email': email,
       'photo': photo,
       'role': role,
+      'isActive': isActive,
       'updatedAt': FieldValue.serverTimestamp(),
     };
   }

@@ -85,6 +85,12 @@ class _FormSaranState extends State<FormSaran> {
               controller: _messageController,
               label: "Pesan:",
               maxLine: 5,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return "Berikan Pesan";
+                }
+                return null;
+              },
             ),
           ],
         ),

@@ -6,13 +6,15 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:uts/controllers/auth_controller.dart';
 import 'package:uts/models/user_model.dart';
+import 'package:uts/screens/form_pengajuan.dart';
 import 'package:uts/screens/home_screen.dart';
 import 'package:uts/services/auth_service.dart';
+import 'package:uts/services/pengajuan_service.dart';
+import 'package:uts/widgets/dialog_confirm.dart';
 import 'package:uts/widgets/footer.dart';
+import 'package:uts/widgets/dialog_edit_profile.dart';
 import 'package:uts/widgets/icon_action_appbar.dart';
-import 'package:uts/widgets/text_form_field_edit.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:flutter_inset_shadow/flutter_inset_shadow.dart' as inset;
 
 class UserProfileScreen extends StatefulWidget {
   const UserProfileScreen({super.key});
@@ -23,6 +25,7 @@ class UserProfileScreen extends StatefulWidget {
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
   final AuthService _service = AuthService();
+  final PengajuanService _pengajuanService = PengajuanService();
   UserModel? userData;
 
   bool isLoading = true;
@@ -30,6 +33,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   File? _image;
   final ImagePicker _picker = ImagePicker();
   bool _showCameraIcon = false;
+  bool isUserInPengajuan = false;
 
   @override
   void initState() {
@@ -40,7 +44,16 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   Future<void> _loadProfile() async {
     try {
       final user = await _service.getProfile();
+      final exists = await _pengajuanService.isUserInPengajuan(user.docId!);
+
       setState(() {
+        if (exists) {
+          isUserInPengajuan = true;
+          print('User sudah punya pengajuan');
+        } else {
+          isUserInPengajuan = false;
+          print('User belum punya pengajuan');
+        }
         userData = user;
         isLoading = false;
       });
@@ -53,233 +66,12 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   }
 
   void _editProfileForm() {
-    final formKey = GlobalKey<FormState>();
-    final usernameController = TextEditingController();
-    final emailController = TextEditingController();
-    final newPasswordController = TextEditingController();
-    final oldPasswordController = TextEditingController();
-
-    usernameController.text = userData!.username;
-    emailController.text = userData!.email;
-
     showDialog(
       context: context,
       builder: (context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30),
-          ),
-
-          child: SingleChildScrollView(
-            padding: EdgeInsets.only(
-              bottom: MediaQuery.of(context).viewInsets.bottom,
-            ),
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Color(0xFFB64BC9), Color(0xFFFFAFF4)],
-                ),
-                borderRadius: BorderRadius.circular(30),
-              ),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: Text(
-                      "Edit Profil",
-                      style: GoogleFonts.lora(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 30,
-                      ),
-                    ),
-                  ),
-
-                  Container(
-                    width: double.infinity,
-                    padding: EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    child: Form(
-                      key: formKey,
-                      child: Column(
-                        children: [
-                          SizedBox(height: 10),
-                          TextFormFieldEdit(
-                            controller: usernameController,
-                            label: 'Username',
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return "Username tidak boleh kosong";
-                              }
-                              return null;
-                            },
-                          ),
-                          TextFormFieldEdit(
-                            controller: emailController,
-                            label: 'Email',
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return "Email tidak boleh kosong";
-                              }
-                              if (!value.contains('@')) {
-                                return "Masukkan email yang valid";
-                              }
-                              return null;
-                            },
-                          ),
-                          TextFormFieldEdit(
-                            controller: newPasswordController,
-                            label: "Password Baru",
-                            validator: (value) {
-                              if (value != null &&
-                                  value.isNotEmpty &&
-                                  value.length < 6) {
-                                return "Minimal 6 karakter";
-                              }
-                              return null;
-                            },
-                          ),
-                          TextFormFieldEdit(
-                            controller: oldPasswordController,
-                            label: "Password Lama",
-                            validator: (value) {
-                              if (newPasswordController.text.isNotEmpty &&
-                                  (value == null || value.isEmpty)) {
-                                return "Masukan Password yang Benar";
-                              }
-                              return null;
-                            },
-                          ),
-
-                          SizedBox(height: 20),
-
-                          SizedBox(
-                            width: double.infinity,
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Container(
-                                    height: 45,
-                                    decoration: inset.BoxDecoration(
-                                      color: Color(0xFFFFAFF4),
-                                      boxShadow: [
-                                        inset.BoxShadow(
-                                          color: Colors.black45.withOpacity(
-                                            0.5,
-                                          ),
-                                          blurRadius: 2,
-                                          offset: Offset(3, -3),
-                                          inset: true,
-                                        ),
-                                      ],
-                                      borderRadius: BorderRadius.circular(30),
-                                    ),
-                                    child: ElevatedButton(
-                                      onPressed: () => Navigator.pop(context),
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.transparent,
-                                        shadowColor: Colors.transparent,
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          "Batal",
-                                          style: GoogleFonts.judson(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 20),
-                                Expanded(
-                                  child: Container(
-                                    height: 45,
-                                    decoration: inset.BoxDecoration(
-                                      color: Color(0xFFB64BC9),
-                                      boxShadow: [
-                                        inset.BoxShadow(
-                                          color: Colors.black45.withOpacity(
-                                            0.5,
-                                          ),
-                                          blurRadius: 2,
-                                          offset: Offset(3, -3),
-                                          inset: true,
-                                        ),
-                                      ],
-                                      borderRadius: BorderRadius.circular(30),
-                                    ),
-                                    child: ElevatedButton(
-                                      onPressed: () async {
-                                        if (!formKey.currentState!.validate())
-                                          return;
-
-                                        try {
-                                          await _service.updateProfile(
-                                            username: usernameController.text
-                                                .trim(),
-                                            email: emailController.text.trim(),
-                                            oldPassword:
-                                                oldPasswordController.text,
-                                            newPassword:
-                                                newPasswordController.text,
-                                          );
-
-                                          Navigator.pop(context);
-                                          _loadProfile();
-
-                                          ScaffoldMessenger.of(
-                                            context,
-                                          ).showSnackBar(
-                                            SnackBar(
-                                              content: Text(
-                                                "Profil berhasil diperbarui",
-                                              ),
-                                            ),
-                                          );
-                                        } catch (e) {
-                                          ScaffoldMessenger.of(
-                                            context,
-                                          ).showSnackBar(
-                                            SnackBar(
-                                              content: Text("Gagal update: $e"),
-                                            ),
-                                          );
-                                        }
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.transparent,
-                                        shadowColor: Colors.transparent,
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          "Simpan",
-                                          style: GoogleFonts.judson(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+        return DialogEditProfile(
+          userData: userData!,
+          loadProfile: _loadProfile,
         );
       },
     );
@@ -290,88 +82,33 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       context: context,
       barrierDismissible: false,
       builder: (context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30),
-          ),
-          child: Container(
-            height: 230,
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Color(0xFFFFAFF4), Color(0xFFB64BC9)],
-              ),
-              borderRadius: BorderRadius.circular(30),
-            ),
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5),
-                  child: Text(
-                    "Konfimasi Keluar",
-                    style: GoogleFonts.lora(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 25,
-                    ),
-                  ),
-                ),
-                Container(
-                  height: 70,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(20),
-                      bottomRight: Radius.circular(20),
-                    ),
-                    color: Colors.white,
-                  ),
-                  child: Center(
-                    child: Text(
-                      "Anda yakin ingin keluar?",
-                      style: GoogleFonts.josefinSans(
-                        color: Color(0xFFB64BC9),
-                        fontSize: 18,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () => Navigator.pop(context),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                      ),
-                      child: Text(
-                        "Batal",
-                        style: GoogleFonts.josefinSans(
-                          color: Color(0xFFFFAFF4),
-                        ),
-                      ),
-                    ),
-                    ElevatedButton(
-                      onPressed: () async {
-                        await _service.logout();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (_) => const HomeScreen()),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFFFFAFF4),
-                      ),
-                      child: Text(
-                        "Okay!",
-                        style: GoogleFonts.josefinSans(color: Colors.white),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+        return DialogConfirm(
+          title: "Konfirmasi Keluar",
+          deskripsi: "Anda yakin ingin keluar?",
+          onPressed: () async {
+            await _service.logout();
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const HomeScreen()),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void _confirmDeleteAcc() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return DialogConfirm(
+          title: "Ajukan Hapus Akun",
+          deskripsi: "Anda yakin ingin mengajukan penghapusan akun?",
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => FormPengajuan(idUser: userData!.docId!),
             ),
           ),
         );
@@ -422,7 +159,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     }
   }
 
-  
   @override
   Widget build(BuildContext context) {
     final uploadPhotoController = context.watch<AuthController>();
@@ -478,6 +214,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       children: [
                         IconActionAppbar(
                           icon: Icons.reply_rounded,
+                          tooltip: "kembali",
                           onPressed: () {
                             Navigator.push(
                               context,
@@ -487,9 +224,47 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                             );
                           },
                         ),
-                        IconActionAppbar(
-                          icon: Icons.logout_rounded,
-                          onPressed: _confirmLogout,
+                        Row(
+                          children: [
+                            userData!.isActive
+                                ? isUserInPengajuan
+                                      ? IconActionAppbar(
+                                          tooltip: "hapus akun",
+                                          icon: Icons.auto_delete_rounded,
+                                          onPressed: () {
+                                            showDialog(
+                                              context: context,
+                                              barrierDismissible: false,
+                                              builder: (context) {
+                                                return DialogConfirm(
+                                                  title: "Pemberitahuan",
+                                                  deskripsi:
+                                                      "Akun anda sedang dalam proses penghapusan.",
+                                                  onPressed: () =>
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              HomeScreen(),
+                                                        ),
+                                                      ),
+                                                );
+                                              },
+                                            );
+                                          },
+                                        )
+                                      : IconActionAppbar(
+                                          tooltip: "hapus akun",
+                                          icon: Icons.delete_forever_rounded,
+                                          onPressed: _confirmDeleteAcc,
+                                        )
+                                : SizedBox(),
+                            IconActionAppbar(
+                              tooltip: "keluar",
+                              icon: Icons.logout_rounded,
+                              onPressed: _confirmLogout,
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -510,7 +285,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       children: [
                         Container(
                           decoration: BoxDecoration(
-                            shape: BoxShape.circle,  
+                            shape: BoxShape.circle,
                             border: Border.all(color: Colors.white, width: 5),
                             boxShadow: [
                               BoxShadow(
@@ -623,14 +398,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   ),
                   SizedBox(height: 6),
                   Text(
-                    userData!.username,
+                    "${userData!.username}  ${userData!.role == 'admin' ? '(admin)' : ''}",
                     style: GoogleFonts.josefinSans(fontSize: 16),
                   ),
                   SizedBox(height: 10),
                   Divider(color: Color(0xFFE0E0E0), thickness: 1),
                   SizedBox(height: 20),
 
-                  // Email
                   Text(
                     'Email',
                     style: GoogleFonts.josefinSans(
@@ -647,7 +421,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   Divider(color: Color(0xFFE0E0E0), thickness: 1),
                   SizedBox(height: 20),
 
-                  // Telepon
                   Text(
                     'Password',
                     style: GoogleFonts.josefinSans(
@@ -675,6 +448,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         backgroundColor: Color(0xFFF4A9C2),
         child: Icon(Icons.edit, color: Colors.white, size: 30),
       ),
+
       bottomNavigationBar: Footer(color: Color(0xFFC4B0E9)),
     );
   }

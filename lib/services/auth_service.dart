@@ -39,12 +39,11 @@ class AuthService {
         "email": email,
         "photo": "",
         "role": "user",
+        "isActive": true,
       });
       print("Register berhasil");
 
-      notifService.createPersonalNotif(
-        cred.user!.uid, 'welcome'
-      );
+      notifService.createPersonalNotif(cred.user!.uid, 'welcome');
 
       return null;
     } on FirebaseAuthException catch (e) {
@@ -60,7 +59,26 @@ class AuthService {
 
   Future<String?> login(String email, String password) async {
     try {
-      await _auth.signInWithEmailAndPassword(email: email, password: password);
+      final cred = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      final uid = cred.user!.uid;
+
+      final userDoc = await _userRef.doc(uid).get();
+
+      if (!userDoc.exists) {
+        await logout();
+        return "Akun tidak ditemukan";
+      }
+
+      final isActive = userDoc['isActive'] ?? true;
+
+      if (!isActive) {
+        await logout();
+        return "Akun Anda telah dinonaktifkan oleh admin";
+      }
 
       return null;
     } on FirebaseAuthException catch (e) {
@@ -72,6 +90,11 @@ class AuthService {
         return "Login gagal: ${e.message}";
       }
     }
+  }
+
+  Future<List<UserModel>> getAllUsers() async {
+    final snapshot = await _userRef.get();
+    return snapshot.docs.map((doc) => UserModel.fromFirestore(doc)).toList();
   }
 
   Future<UserModel> getProfile() async {
@@ -93,6 +116,37 @@ class AuthService {
       throw Exception('User tidak ditemukan');
     }
     return UserModel.fromFirestore(doc);
+  }
+
+  Future<List<UserModel>> searchUserByEmail(String query) async {
+    final snapshot = await _userRef.get();
+
+    final results = snapshot.docs
+        .map((doc) => UserModel.fromFirestore(doc))
+        .where((user) => user.email.toLowerCase().contains(query.toLowerCase()))
+        .toList();
+
+    return results;
+  }
+
+  Future<String> setAdmin(bool add, String idUser) async {
+    try {
+      final userCheck = await _userRef.doc(idUser).get();
+
+      if (!userCheck.exists) {
+        return "User tidak ada";
+      }
+
+      await _userRef.doc(idUser).update({'role': add ? 'admin' : 'user'});
+
+      notifService.createPersonalNotif(idUser, add ? 'addAdmin' : 'unAdmin');
+
+      return add
+          ? "Pengguna telah menjadi admin"
+          : "Admin telah menjadi pengguna";
+    } catch (e) {
+      return "Error: $e";
+    }
   }
 
   Future<void> updateProfile({
@@ -168,6 +222,15 @@ class AuthService {
     await prefs.remove('userId');
     await prefs.remove('userLevel');
     _auth.signOut();
+  }
+
+  Future<void> deleteAccount(String idUser) async {
+    try {
+      await _userRef.doc(idUser).update({'isActive': false});
+      notifService.createPersonalNotif(idUser, 'deleteAcc');
+    } catch (e) {
+      print(e);
+    }
   }
 
   Widget toAccountPage() {

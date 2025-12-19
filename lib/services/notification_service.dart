@@ -117,6 +117,9 @@ class NotificationService {
     final String welcome = "hDS35w3BI2Cr440zSlVk";
     final String feedback = "qxjNU8sX1tgFwVGLLru3";
     final String warning = "nW5VxQ24QjT5WZSbJRQl";
+    final String deleteAcc = "I1QbcM1fmjz66BpaoJfZ";
+    final String addAdmin = "634UOG00Dn7yva9PPqTB";
+    final String unAdmin = "lK0J7ouSUQkG46YUZtRb";
 
     if (type == 'welcome') {
       notifID = welcome;
@@ -124,13 +127,17 @@ class NotificationService {
       notifID = feedback;
     } else if (type == 'warning') {
       notifID = warning;
+    } else if (type == 'deleteAcc') {
+      notifID = deleteAcc;
+    } else if (type == 'addAdmin') {
+      notifID = addAdmin;
+    } else if (type == 'unAdmin') {
+      notifID = unAdmin;
     } else {
       print('type tidak valid');
       return;
     }
 
-    print(notifID);
-    print(userID);
     try {
       await _firestore
           .collection('users')

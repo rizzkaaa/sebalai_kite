@@ -40,6 +40,7 @@ class _SaranScreenState extends State<SaranScreen> {
         leading: Padding(
           padding: const EdgeInsets.all(8),
           child: IconActionAppbar(
+            tooltip: "kembali",
             icon: Icons.reply,
             onPressed: () => Navigator.pop(context),
           ),
@@ -77,9 +78,7 @@ class _SaranScreenState extends State<SaranScreen> {
                 final timestamp = s['time'] as Timestamp?;
                 final dateTime = timestamp?.toDate();
 
-                return GestureDetector(
-                  onTap: () {},
-                  child: Container(
+                return Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 15,
                       vertical: 8,
@@ -201,7 +200,6 @@ class _SaranScreenState extends State<SaranScreen> {
                             ),
                           ),
                       ],
-                    ),
                   ),
                 );
               },

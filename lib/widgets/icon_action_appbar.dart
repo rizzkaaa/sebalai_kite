@@ -3,9 +3,14 @@ import 'package:flutter/material.dart';
 class IconActionAppbar extends StatelessWidget {
   final IconData icon;
   final VoidCallback onPressed;
+  final String tooltip;
 
-  const IconActionAppbar({Key? key, required this.icon, required this.onPressed})
-    : super(key: key);
+  const IconActionAppbar({
+    super.key,
+    required this.icon,
+    required this.onPressed,
+    required this.tooltip,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +22,7 @@ class IconActionAppbar extends StatelessWidget {
       ),
       child: Center(
         child: IconButton(
+          tooltip: tooltip,
           padding: EdgeInsets.zero,
           onPressed: onPressed,
           icon: Icon(icon, color: Colors.white),

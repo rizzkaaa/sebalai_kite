@@ -7,6 +7,8 @@ class TextFormFieldFormInput extends StatelessWidget {
   final int? maxLine;
   final TextInputType? number;
   final ValueChanged<String>? onChanged;
+  final String? Function(String?)? validator;
+
 
 
   const TextFormFieldFormInput({
@@ -16,6 +18,7 @@ class TextFormFieldFormInput extends StatelessWidget {
     this.maxLine,
     this.number,
     this.onChanged,
+    this.validator
   });
 
   @override
@@ -56,6 +59,7 @@ class TextFormFieldFormInput extends StatelessWidget {
               vertical: 15,
             ),
           ),
+          validator: validator ?? (value){ return null; },
         ),
       ],
     );

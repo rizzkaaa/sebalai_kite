@@ -9,6 +9,7 @@ import 'package:uts/screens/chat_floating_widget.dart';
 import 'package:uts/screens/galeri_content.dart';
 import 'package:uts/screens/home_content.dart';
 import 'package:uts/screens/katalog_content.dart';
+import 'package:uts/screens/list_user_screen.dart';
 import 'package:uts/screens/maps_screen.dart';
 import 'package:uts/screens/musik_content.dart';
 import 'package:uts/screens/notification_screen.dart';
@@ -79,8 +80,6 @@ class _HomeScreenState extends State<HomeScreen>
     setState(() {
       userID = prefs.getString('userId');
       userLevel = prefs.getString('userLevel');
-      print(userID);
-      print(userLevel);
     });
   }
 
@@ -108,6 +107,7 @@ class _HomeScreenState extends State<HomeScreen>
                         clipBehavior: Clip.none,
                         children: [
                           IconActionAppbar(
+                            tooltip: "Kotak Masuk",
                             icon: Icons.inbox_outlined,
                             onPressed: () {
                               Navigator.push(
@@ -150,6 +150,7 @@ class _HomeScreenState extends State<HomeScreen>
                         clipBehavior: Clip.none,
                         children: [
                           IconActionAppbar(
+                            tooltip: "notifikasi",
                             icon: Icons.notifications_none_outlined,
                             onPressed: () {
                               Navigator.push(
@@ -185,6 +186,7 @@ class _HomeScreenState extends State<HomeScreen>
                   ),
 
             IconActionAppbar(
+              tooltip: "peta",
               icon: Icons.map_outlined,
               onPressed: () {
                 Navigator.push(
@@ -194,6 +196,7 @@ class _HomeScreenState extends State<HomeScreen>
               },
             ),
             IconActionAppbar(
+              tooltip: "akun",
               icon: Icons.person_2_outlined,
               onPressed: () {
                 Navigator.push(
@@ -295,6 +298,8 @@ class _HomeScreenState extends State<HomeScreen>
                         ),
                       ),
                     ),
+                 
+                 
                   ],
                 ),
               ),
@@ -388,6 +393,18 @@ class _HomeScreenState extends State<HomeScreen>
                 icon: Icons.home,
                 title: 'Beranda',
               ),
+              if (userLevel == 'admin')
+                ListTileDrawer(
+                  selected: false,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ListUserScreen()),
+                    );
+                  },
+                  icon: Icons.people_outline_outlined,
+                  title: 'Daftar User',
+                ),
               ListTileDrawer(
                 selected: _tabController.index == 1,
                 onTap: () => _goToTab(1),

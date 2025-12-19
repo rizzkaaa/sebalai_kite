@@ -94,6 +94,7 @@ class _ChatFloatingWidgetState extends State<ChatFloatingWidget> {
                             Row(
                               children: [
                                 IconActionAppbar(
+                                  tooltip: "layar penuh",
                                   icon: Icons.fullscreen,
                                   onPressed: () {
                                     Navigator.push(
@@ -105,6 +106,7 @@ class _ChatFloatingWidgetState extends State<ChatFloatingWidget> {
                                   },
                                 ),
                                 IconActionAppbar(
+                                  tooltip: "tutup",
                                   icon: Icons.close,
                                   onPressed: () =>
                                       setState(() => isOpen = false),

@@ -31,6 +31,7 @@ class ChatPage extends StatelessWidget {
           leading: Container(
             margin: const EdgeInsets.only(left: 15),
             child: IconActionAppbar(
+              tooltip: "kembali",
               icon: Icons.reply_rounded,
               onPressed: () {
                 Navigator.pop(context);
