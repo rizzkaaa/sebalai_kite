@@ -11,7 +11,7 @@
 
     <application
         android:name="${applicationName}"
-        android:label="uts"
+        android:label="Sebalai Kite"
         android:icon="@mipmap/ic_launcher">
 
         <activity
